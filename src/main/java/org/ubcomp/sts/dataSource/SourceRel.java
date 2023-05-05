@@ -1,7 +1,7 @@
 package org.ubcomp.sts.dataSource;
 
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
-import org.ubcomp.sts.objects.gpsPoint;
+import org.ubcomp.sts.objects.GpsPoint;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,14 +15,14 @@ import java.util.Objects;
  * @author syy
  **/
 
-public class sourceRel3 implements SourceFunction<gpsPoint> {
+public class SourceRel implements SourceFunction<GpsPoint> {
     // 声明一个布尔变量，作为控制数据生成的标识位
     private Boolean running = true;
 
     @Override
-    public void run(SourceContext<gpsPoint> ctx) throws Exception {
+    public void run(SourceContext<GpsPoint> ctx) throws Exception {
 
-        try (InputStream in = sourceRel3.class.getClassLoader().getResourceAsStream("wh1000");
+        try (InputStream in = SourceRel.class.getClassLoader().getResourceAsStream("wh1000");
              BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(in)))) {
             String trajStr;
             int count =0;
@@ -40,7 +40,7 @@ public class sourceRel3 implements SourceFunction<gpsPoint> {
                 String tid = result[3];
 
                 String time = t1.substring(0, 4) + "-" + t1.substring(4, 6) + "-" + t1.substring(6, 8) + " " + t2.substring(0, 2) + ":" + t2.substring(2, 4) + ":" + t2.substring(4, 6);
-                gpsPoint point = new gpsPoint(Double.parseDouble(lng),
+                GpsPoint point = new GpsPoint(Double.parseDouble(lng),
                         Double.parseDouble(lat),
                         tid,
                         time,

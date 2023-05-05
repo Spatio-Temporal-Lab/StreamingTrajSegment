@@ -1,27 +1,8 @@
 package org.ubcomp.sts.utils;
 
-import org.ubcomp.sts.objects.gpsPoint;
+import org.ubcomp.sts.objects.GpsPoint;
 
-import java.util.ArrayList;
-
-public class calculateDistance {
-
-    /**
-     * Return distance value
-     *
-     * @return distance
-     * @p p1 previous point
-     * @p p2 current Point
-     * @author syy
-     **/
-    public static double getDistance(ArrayList<gpsPoint> p) {
-        int size = p.size();
-        if (size == 1) {
-            return -1;
-        } else {
-            return calculateDistance(p.get(size - 2), p.get(size - 1));
-        }
-    }
+public class CalculateDistance {
 
     /**
      * Return distance between two points
@@ -31,7 +12,7 @@ public class calculateDistance {
      * @p p2 current Point
      * @author syy
      **/
-    public static double calculateDistance(gpsPoint p1, gpsPoint p2) {
+    public static double calculateDistance(GpsPoint p1, GpsPoint p2) {
         double lat1 = p1.lat;
         double lat2 = p2.lat;
         double lng1 = p1.lng;

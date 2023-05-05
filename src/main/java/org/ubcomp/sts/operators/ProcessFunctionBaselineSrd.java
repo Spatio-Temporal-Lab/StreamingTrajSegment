@@ -6,12 +6,12 @@ import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
 import org.apache.flink.util.Collector;
-import org.ubcomp.sts.objects.gpsPoint;
-import org.ubcomp.sts.objects.tempFlag;
-import org.ubcomp.sts.objects.tempPointList;
-import org.ubcomp.sts.tlof.streamLOF;
+import org.ubcomp.sts.objects.GpsPoint;
+import org.ubcomp.sts.objects.TempFlag;
+import org.ubcomp.sts.objects.TempPointList;
+import org.ubcomp.sts.tlof.StreamLOF;
 import org.ubcomp.sts.utils.Interpolator;
-import org.ubcomp.sts.utils.calculateDistance;
+import org.ubcomp.sts.utils.CalculateDistance;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,52 +23,52 @@ import java.util.List;
  * @Version 1.0
  **/
 
-public class myStsOnline extends KeyedProcessFunction<String, gpsPoint, Object> {
+public class ProcessFunctionBaselineSrd extends KeyedProcessFunction<String, GpsPoint, Object> {
 
     double min_r = 10000;
     double min_density = 0.5;
 
-    tempPointList tempPointList = new tempPointList(true);
-    ValueState<tempPointList> tempPointListValueState;
-    ValueState<tempFlag> tempFlagValueState;
+    TempPointList tempPointList = new TempPointList(true);
+    ValueState<TempPointList> tempPointListValueState;
+    ValueState<TempFlag> tempFlagValueState;
     Interpolator i1 = new Interpolator();
     int c1;
     long t;
-    public myStsOnline() {
+    public ProcessFunctionBaselineSrd() {
     }
 
     @Override
     public void open(Configuration parameters) {
         tempPointListValueState = getRuntimeContext().getState(
                 new ValueStateDescriptor<>("tempPointList",
-                        Types.POJO(tempPointList.class))
+                        Types.POJO(TempPointList.class))
         );
         tempFlagValueState = getRuntimeContext().getState(
                 new ValueStateDescriptor<>("tempFlag",
-                        Types.POJO(tempFlag.class))
+                        Types.POJO(TempFlag.class))
         );
         c1 = 0;
         t=0;
     }
 
     @Override
-    public void processElement(gpsPoint point, KeyedProcessFunction<String, gpsPoint, Object>.Context context, Collector<Object> collector) throws Exception {
+    public void processElement(GpsPoint point, KeyedProcessFunction<String, GpsPoint, Object>.Context context, Collector<Object> collector) throws Exception {
 
         long startTime = System.currentTimeMillis();
-        tempPointList tempPointList = tempPointListValueState.value();
+        TempPointList tempPointList = tempPointListValueState.value();
         if (tempPointList == null) {
-            tempPointListValueState.update(new tempPointList(true));
-            tempFlagValueState.update(new tempFlag());
+            tempPointListValueState.update(new TempPointList(true));
+            tempFlagValueState.update(new TempFlag());
         }
         tempPointList = tempPointListValueState.value();
-        tempFlag tempFlag1 = tempFlagValueState.value();
+        TempFlag tempFlag1 = tempFlagValueState.value();
         int i = tempFlag1.i;
         double radius = tempFlag1.radius;
-        List<gpsPoint> centroids = tempFlag1.centroids;
+        List<GpsPoint> centroids = tempFlag1.centroids;
         List<Integer> cutofs = tempFlag1.cutofs;
         int nPoints = tempFlag1.nPoints;
-        gpsPoint currentCentroid = tempFlag1.currentCentroid;
-        streamLOF lof = tempFlag1.lof;
+        GpsPoint currentCentroid = tempFlag1.currentCentroid;
+        StreamLOF lof = tempFlag1.lof;
 
 
         if (currentCentroid == null) {
@@ -78,9 +78,9 @@ public class myStsOnline extends KeyedProcessFunction<String, gpsPoint, Object> 
                 tempPointList.pointList.get(tempPointList.getSize() - 1).ingestionTime >= 30000) {
             //直接插值
             //System.out.println("直接插值 " + (point.ingestionTime -temp_point_list.pointList.get(temp_point_list.getSize() - 1).ingestionTime) + " "+ point);
-            List<gpsPoint> pp = i1.interpolatePoints(tempPointList.pointList.subList(
+            List<GpsPoint> pp = i1.interpolatePoints(tempPointList.pointList.subList(
                     tempPointList.getSize() - 3, tempPointList.getSize()), point);
-            for (gpsPoint p : pp) {
+            for (GpsPoint p : pp) {
                 tempPointList.add(p);
                 lof.update(p);
             }
@@ -92,7 +92,7 @@ public class myStsOnline extends KeyedProcessFunction<String, gpsPoint, Object> 
             if (score > 30 && score < 10000) {
                 //System.out.println("lof:" + score + "替换异常点" + " " + point);
                 if (tempPointList.getSize() > 3) {
-                    gpsPoint p = i1.interpolatePosition(tempPointList.pointList.subList(
+                    GpsPoint p = i1.interpolatePosition(tempPointList.pointList.subList(
                             tempPointList.getSize() - 4, tempPointList.getSize() - 1), point.ingestionTime);
                     tempPointList.pointList.remove(tempPointList.getSize() - 1);
                     tempPointList.add(p);
@@ -101,7 +101,7 @@ public class myStsOnline extends KeyedProcessFunction<String, gpsPoint, Object> 
                 }
             }
             nPoints++;
-            double distance = calculateDistance.calculateDistance(point, currentCentroid);
+            double distance = CalculateDistance.calculateDistance(point, currentCentroid);
             radius = Math.max(radius, distance);
 
             if (radius > min_r) {

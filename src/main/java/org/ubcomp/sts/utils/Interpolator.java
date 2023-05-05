@@ -1,6 +1,6 @@
 package org.ubcomp.sts.utils;
 
-import org.ubcomp.sts.objects.gpsPoint;
+import org.ubcomp.sts.objects.GpsPoint;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -12,12 +12,12 @@ import java.util.List;
 
 public class Interpolator implements Serializable {
     public Interpolator(){}
-    public  List<gpsPoint> interpolatePoints(List<gpsPoint> points, gpsPoint newPoint) throws  ParseException {
+    public  List<GpsPoint> interpolatePoints(List<GpsPoint> points, GpsPoint newPoint) throws  ParseException {
 
-        gpsPoint prevPoint1 = points.get(0);
-        gpsPoint prevPoint2 = points.get(1);
-        gpsPoint prevPoint3 = points.get(2);
-        List<gpsPoint> interpolatedPoints = new ArrayList<>();
+        GpsPoint prevPoint1 = points.get(0);
+        GpsPoint prevPoint2 = points.get(1);
+        GpsPoint prevPoint3 = points.get(2);
+        List<GpsPoint> interpolatedPoints = new ArrayList<>();
 
         // 计算插值个数
         long timeDiff1 = prevPoint2.ingestionTime - prevPoint1.ingestionTime;
@@ -52,7 +52,7 @@ public class Interpolator implements Serializable {
             double ratio1 = (double) (prevPoint2.ingestionTime - interpolatedTimestamp) / deltaIngestionTime1;
             double interpolatedLat = (prevPoint1.lat + prevPoint2.lat * ratio1 + prevPoint3.lat * ratio2) / (1 + ratio1 + ratio2);
             double interpolatedLng = (prevPoint1.lng + prevPoint2.lng * ratio1 + prevPoint3.lng * ratio2) / (1 + ratio1 + ratio2);
-            interpolatedPoints.add(new gpsPoint(interpolatedLng, interpolatedLat, newPoint.tid, new Timestamp(interpolatedTimestamp).toString(), 0));
+            interpolatedPoints.add(new GpsPoint(interpolatedLng, interpolatedLat, newPoint.tid, new Timestamp(interpolatedTimestamp).toString(), 0));
         }
         // 将插值点和最新点加入结果列表并返回
         interpolatedPoints.add(newPoint);
@@ -60,10 +60,10 @@ public class Interpolator implements Serializable {
     }
 
 
-    public  gpsPoint interpolatePosition(List<gpsPoint> points , long t) throws  ParseException {
-        gpsPoint p1 = points.get(0);
-        gpsPoint p2 = points.get(1);
-        gpsPoint p3 = points.get(2);
+    public GpsPoint interpolatePosition(List<GpsPoint> points , long t) throws  ParseException {
+        GpsPoint p1 = points.get(0);
+        GpsPoint p2 = points.get(1);
+        GpsPoint p3 = points.get(2);
         long t1 = p1.ingestionTime;
         long t2 = p2.ingestionTime;
         long t3 = p3.ingestionTime;
@@ -78,7 +78,7 @@ public class Interpolator implements Serializable {
         String tid = p1.tid; // or p2.tid or p3.tid, it doesn't matter since they should be the same
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String ingestionTime = formatter.format(new Date(t));
-        gpsPoint interpolatedPoint = new gpsPoint(lng_interpolated, lat_interpolated, tid, ingestionTime, 0);
+        GpsPoint interpolatedPoint = new GpsPoint(lng_interpolated, lat_interpolated, tid, ingestionTime, 0);
         return interpolatedPoint;
     }
 
