@@ -6,21 +6,25 @@ import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
 import org.apache.flink.util.Collector;
-import org.ubcomp.sts.objects.gpsPoint;
-import org.ubcomp.sts.objects.tempFlag;
-import org.ubcomp.sts.objects.tempPointList;
-import org.ubcomp.sts.tlof.streamLOF;
+import org.ubcomp.sts.objects.GpsPoint;
+import org.ubcomp.sts.objects.TempFlag;
+import org.ubcomp.sts.objects.TempPointList;
+import org.ubcomp.sts.tlof.StreamLOF;
 import org.ubcomp.sts.utils.Interpolator;
-import org.ubcomp.sts.utils.calculateDistance;
-import org.ubcomp.sts.utils.findT;
+import org.ubcomp.sts.utils.CalculateDistance;
+import org.ubcomp.sts.utils.FindT;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class myStsBoth extends KeyedProcessFunction<String, gpsPoint, Object> {
+/**
+ * @author syy
+ * 融合距离并添加网格索引的版本
+ */
+public class ProcessFunctionMergeDistanceGird extends KeyedProcessFunction<String, GpsPoint, Object> {
 
     //构造方法
-    public myStsBoth(double D, long T) {
+    public ProcessFunctionMergeDistanceGird(double D, long T) {
         this.maxD = D;
         this.minT = T;
     }
@@ -31,8 +35,8 @@ public class myStsBoth extends KeyedProcessFunction<String, gpsPoint, Object> {
     long minT;
     Interpolator i1 = new Interpolator();
     //状态：轨迹点列表（存储到来得gps点）
-    ValueState<tempPointList> tempPointListValueState;
-    ValueState<tempFlag> tempFlagValueState;
+    ValueState<TempPointList> tempPointListValueState;
+    ValueState<TempFlag> tempFlagValueState;
 
     int c1;
     long t;
@@ -44,35 +48,35 @@ public class myStsBoth extends KeyedProcessFunction<String, gpsPoint, Object> {
     @Override
     public void open(Configuration parameters) {
         tempPointListValueState = getRuntimeContext().getState(
-                new ValueStateDescriptor<tempPointList>("tempPointList",
-                        Types.POJO(tempPointList.class))
+                new ValueStateDescriptor<TempPointList>("tempPointList",
+                        Types.POJO(TempPointList.class))
         );
         tempFlagValueState = getRuntimeContext().getState(
                 new ValueStateDescriptor<>("tempFlag",
-                        Types.POJO(tempFlag.class))
+                        Types.POJO(TempFlag.class))
         );
         c1 = 0;
         t = 0;
     }
 
     @Override
-    public void processElement(gpsPoint point, KeyedProcessFunction<String, gpsPoint, Object>.Context context, Collector<Object> collector) throws Exception {
+    public void processElement(GpsPoint point, KeyedProcessFunction<String, GpsPoint, Object>.Context context, Collector<Object> collector) throws Exception {
 
         long startTime = System.currentTimeMillis();
         /**
          * step1 初始化状态
          **/
-        tempPointList tempPointList = tempPointListValueState.value();
+        TempPointList tempPointList = tempPointListValueState.value();
         if (tempPointList == null) {
-            tempPointListValueState.update(new tempPointList(true));
-            tempFlagValueState.update(new tempFlag());
+            tempPointListValueState.update(new TempPointList(true));
+            tempFlagValueState.update(new TempFlag());
         }
         tempPointList = tempPointListValueState.value();
-        tempFlag tempFlag1 = tempFlagValueState.value();
-        List<gpsPoint> latePoints = tempFlag1.latePoints;
-        List<gpsPoint> tempPoints = tempFlag1.tempPoints;
-        gpsPoint tempPoint = tempFlag1.tempPoint;
-        streamLOF lof = tempFlag1.lof;
+        TempFlag tempFlag1 = tempFlagValueState.value();
+        List<GpsPoint> latePoints = tempFlag1.latePoints;
+        List<GpsPoint> tempPoints = tempFlag1.tempPoints;
+        GpsPoint tempPoint = tempFlag1.tempPoint;
+        StreamLOF lof = tempFlag1.lof;
 
 
         /**
@@ -128,7 +132,7 @@ public class myStsBoth extends KeyedProcessFunction<String, gpsPoint, Object> {
     }
 
 
-    public void hasNotStayPoint(tempPointList temp_point_list, List<Double> distances) {
+    public void hasNotStayPoint(TempPointList temp_point_list, List<Double> distances) {
         int ii = distances.size()-1;
         for (int i = temp_point_list.getSize() - 2; i >= 0; i--) {
             double distance;
@@ -138,7 +142,7 @@ public class myStsBoth extends KeyedProcessFunction<String, gpsPoint, Object> {
                 ii--;
             }else {
                 temcount2++;
-                distance = calculateDistance.calculateDistance(temp_point_list.getPointList().get(temp_point_list.getSize() - 1),
+                distance = CalculateDistance.calculateDistance(temp_point_list.getPointList().get(temp_point_list.getSize() - 1),
                         temp_point_list.getPointList().get(i));
             }
             if (distance > maxD) {
@@ -159,8 +163,8 @@ public class myStsBoth extends KeyedProcessFunction<String, gpsPoint, Object> {
         }
     }
 
-    public void hasStayPoint(tempPointList temp_point_list,List<Double> distances) {
-        int t = findT.findT(temp_point_list.pointList, minT);
+    public void hasStayPoint(TempPointList temp_point_list, List<Double> distances) {
+        int t = FindT.findT(temp_point_list.pointList, minT);
         if (t <= temp_point_list.getStayPointFlag) {
             int flag = 0;
             int ii = distances.size()-1;
@@ -172,7 +176,7 @@ public class myStsBoth extends KeyedProcessFunction<String, gpsPoint, Object> {
                     ii--;
                 }else {
                     temcount2++;
-                    distance = calculateDistance.calculateDistance(temp_point_list.getPointList().get(temp_point_list.getSize() - 1),
+                    distance = CalculateDistance.calculateDistance(temp_point_list.getPointList().get(temp_point_list.getSize() - 1),
                             temp_point_list.getPointList().get(i));
                 }
                 if (distance >= maxD) {

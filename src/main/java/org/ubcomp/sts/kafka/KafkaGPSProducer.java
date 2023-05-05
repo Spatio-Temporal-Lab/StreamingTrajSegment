@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 import org.apache.kafka.clients.producer.*;
 
-public class kafkaGPSProducer {
+public class KafkaGPSProducer {
 
     public static void main(String[] args) throws Exception{
 

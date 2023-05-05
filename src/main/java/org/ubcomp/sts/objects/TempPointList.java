@@ -8,10 +8,10 @@ import java.util.ArrayList;
  *
  * @author syy
  **/
-public class tempPointList implements Serializable {
+public class TempPointList implements Serializable {
 
     //temporary gps point list
-    public ArrayList<gpsPoint> pointList;
+    public ArrayList<GpsPoint> pointList;
     //indicates the presence or absence of  stay point
     public boolean hasStayPoint = false;
     //the location of stay point(total)
@@ -19,10 +19,10 @@ public class tempPointList implements Serializable {
     public int stayPointEnd = 0;
     public int getStayPointFlag = -1;
 
-    public tempPointList() {
+    public TempPointList() {
     }
-    public tempPointList(boolean a) {
-        pointList = new ArrayList<gpsPoint>();
+    public TempPointList(boolean a) {
+        pointList = new ArrayList<GpsPoint>();
     }
 
     /**
@@ -31,11 +31,11 @@ public class tempPointList implements Serializable {
      * @p p new gps point
      * @author syy
      **/
-    public void add(gpsPoint p) {
+    public void add(GpsPoint p) {
         pointList.add(p);
     }
 
-    public ArrayList<gpsPoint> getPointList() {
+    public ArrayList<GpsPoint> getPointList() {
         return pointList;
     }
 
