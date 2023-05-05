@@ -13,7 +13,6 @@ import org.ubcomp.sts.objects.TempFlag;
 import org.ubcomp.sts.objects.TempPointList;
 import org.ubcomp.sts.tlof.StreamLOF;
 import org.ubcomp.sts.utils.Interpolator;
-import org.ubcomp.sts.utils.LinearRegression;
 import org.ubcomp.sts.utils.CalculateDistance;
 
 import java.text.ParseException;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Description 自定义处理函数的base版本
+ * @Description sws对比方法
  * @Author syy
  * @Date 2020/3/18 10:00
  * @Version 1.0
@@ -96,7 +95,7 @@ public class ProcessFunctionBaselineSws extends KeyedProcessFunction<String, Gps
             }
 
             if (tempPointList.getSize()>w){
-                double error = calError2(tempPointList.getPointList().subList(tempPointList.getSize()-w,tempPointList.getSize()));
+                double error = calError(tempPointList.getPointList().subList(tempPointList.getSize()-w,tempPointList.getSize()));
                 //System.out.println(error);
                 if (error > 5000){
                     tempPointList.pointList = new ArrayList<>();
@@ -125,23 +124,6 @@ public class ProcessFunctionBaselineSws extends KeyedProcessFunction<String, Gps
     }
 
     public double calError(List<GpsPoint> pointList) throws ParseException {
-        int mid = pointList.size()/2 + 1;
-        List<GpsPoint> pointList_f = pointList.subList(0,mid);
-        List<GpsPoint> pointList_b = pointList.subList(mid,pointList.size());
-        LinearRegression lr = new LinearRegression();
-        lr.fit_x(pointList_f);
-        lr.fit_y(pointList_f);
-        GpsPoint p1 = lr.predict(pointList.get(mid));
-        LinearRegression lr2 = new LinearRegression();
-        lr2.fit_x(pointList_b);
-        lr2.fit_y(pointList_b);
-        GpsPoint p2 = lr2.predict(pointList.get(mid));
-        GpsPoint p0 = new GpsPoint((p1.lng+ p2.lng)/2,(p1.lat+ p2.lat)/2,p1.tid, p1.ingestionTime,0);
-        double error = CalculateDistance.calculateDistance(p0,pointList.get(mid));
-        return error;
-    }
-
-    public double calError2(List<GpsPoint> pointList) throws ParseException {
         int mid = pointList.size()/2 + 1;
         List<GpsPoint> pointList_f = pointList.subList(0,mid);
         List<GpsPoint> pointList_b = pointList.subList(mid,pointList.size());

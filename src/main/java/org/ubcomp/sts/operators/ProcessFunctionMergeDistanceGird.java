@@ -17,6 +17,10 @@ import org.ubcomp.sts.utils.FindT;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author syy
+ * 融合距离并添加网格索引的版本
+ */
 public class ProcessFunctionMergeDistanceGird extends KeyedProcessFunction<String, GpsPoint, Object> {
 
     //构造方法

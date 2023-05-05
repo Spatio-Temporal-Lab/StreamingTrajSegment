@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * KeyedProcessFunction,used to process data after partitioning.
+ * baseline 融合异常检测中的距离
  *
  * @author syy
  * @p D maximum distance interval

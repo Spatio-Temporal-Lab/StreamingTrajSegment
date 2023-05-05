@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Description 自定义处理函数的base版本
+ * @Description srd对比方法
  * @Author syy
  * @Date 2020/3/18 10:00
  * @Version 1.0
