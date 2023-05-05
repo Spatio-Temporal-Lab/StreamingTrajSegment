@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
  * @author syy
  **/
 
-public class gpsPoint {
+public class GpsPoint {
 
     //经度坐标(x)
     public double lng;
@@ -28,10 +28,10 @@ public class gpsPoint {
     public boolean flag = false;
 
     //构造方法
-    public gpsPoint() {
+    public GpsPoint() {
     }
 
-    public gpsPoint(double lng, double lat, String tid, String ingestionTime, long a) throws ParseException {
+    public GpsPoint(double lng, double lat, String tid, String ingestionTime, long a) throws ParseException {
         //GeometryFactory geofact = new GeometryFactory();
         //CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:4326");
         //CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:3857");
@@ -48,7 +48,7 @@ public class gpsPoint {
         //this.LATCOL = aa.get(0);
         //this.LONCOL = aa.get(1);
     }
-    public gpsPoint(double lng, double lat, String tid, long ingestionTime, long a) throws ParseException {
+    public GpsPoint(double lng, double lat, String tid, long ingestionTime, long a) throws ParseException {
         //GeometryFactory geofact = new GeometryFactory();
         //CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:4326");
         //CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:3857");

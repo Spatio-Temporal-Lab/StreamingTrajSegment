@@ -6,32 +6,32 @@ import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
 import org.apache.flink.util.Collector;
-import org.ubcomp.sts.objects.gpsPoint;
-import org.ubcomp.sts.objects.tempFlag;
-import org.ubcomp.sts.objects.tempPointList;
-import org.ubcomp.sts.tlof.streamLOF;
+import org.ubcomp.sts.objects.GpsPoint;
+import org.ubcomp.sts.objects.TempFlag;
+import org.ubcomp.sts.objects.TempPointList;
+import org.ubcomp.sts.tlof.StreamLOF;
 import org.ubcomp.sts.utils.Interpolator;
-import org.ubcomp.sts.utils.calculateDistance;
-import org.ubcomp.sts.utils.findT;
+import org.ubcomp.sts.utils.CalculateDistance;
+import org.ubcomp.sts.utils.FindT;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Description 自定义处理函数的base版本
+ * @Description base版本的算法
  * @Author syy
  * @Date 2020/3/18 10:00
  * @Version 1.0
  **/
 
-public class mySts extends KeyedProcessFunction<String, gpsPoint, Object> {
+public class ProcessFunctionBase extends KeyedProcessFunction<String, GpsPoint, Object> {
 
 
     /**
      * @param d maximum distance interval
      * @param t minimum time interval
      **/
-    public mySts(double d, long t) {
+    public ProcessFunctionBase(double d, long t) {
         this.maxD = d;
         this.minT = t;
     }
@@ -55,8 +55,8 @@ public class mySts extends KeyedProcessFunction<String, gpsPoint, Object> {
     /**
      * tempPointListValueState: store the temporary point list
      */
-    ValueState<tempPointList> tempPointListValueState;
-    ValueState<tempFlag> tempFlagValueState;
+    ValueState<TempPointList> tempPointListValueState;
+    ValueState<TempFlag> tempFlagValueState;
 
     int c1;
     long t;
@@ -70,11 +70,11 @@ public class mySts extends KeyedProcessFunction<String, gpsPoint, Object> {
     public void open(Configuration parameters) {
         tempPointListValueState = getRuntimeContext().getState(
                 new ValueStateDescriptor<>("tempPointList",
-                        Types.POJO(tempPointList.class))
+                        Types.POJO(TempPointList.class))
         );
         tempFlagValueState = getRuntimeContext().getState(
                 new ValueStateDescriptor<>("tempFlag",
-                        Types.POJO(tempFlag.class))
+                        Types.POJO(TempFlag.class))
         );
         c1 = 0;
         t=0;
@@ -87,21 +87,21 @@ public class mySts extends KeyedProcessFunction<String, gpsPoint, Object> {
      * @param collector collector
      */
     @Override
-    public void processElement(gpsPoint point, KeyedProcessFunction<String, gpsPoint, Object>.Context context, Collector<Object> collector) throws Exception {
+    public void processElement(GpsPoint point, KeyedProcessFunction<String, GpsPoint, Object>.Context context, Collector<Object> collector) throws Exception {
 
         long startTime = System.currentTimeMillis();
         //step1 初始化临时列表
-        tempPointList tempPointList = tempPointListValueState.value();
+        TempPointList tempPointList = tempPointListValueState.value();
         if (tempPointList == null) {
-            tempPointListValueState.update(new tempPointList(true));
-            tempFlagValueState.update(new tempFlag());
+            tempPointListValueState.update(new TempPointList(true));
+            tempFlagValueState.update(new TempFlag());
         }
         tempPointList = tempPointListValueState.value();
-        tempFlag tempFlag1 = tempFlagValueState.value();
-        List<gpsPoint> latePoints = tempFlag1.latePoints;
-        List<gpsPoint> tempPoints = tempFlag1.tempPoints;
-        gpsPoint tempPoint = tempFlag1.tempPoint;
-        streamLOF lof = tempFlag1.lof;
+        TempFlag tempFlag1 = tempFlagValueState.value();
+        List<GpsPoint> latePoints = tempFlag1.latePoints;
+        List<GpsPoint> tempPoints = tempFlag1.tempPoints;
+        GpsPoint tempPoint = tempFlag1.tempPoint;
+        StreamLOF lof = tempFlag1.lof;
 
 
         //step2 根据距离索引判断是否存在驻留点
@@ -158,9 +158,9 @@ public class mySts extends KeyedProcessFunction<String, gpsPoint, Object> {
      * @Description 无驻留点处理过程
      * @param tempPointList 临时存储输入点列表
      */
-    public void hasNotStayPoint(tempPointList tempPointList) {
+    public void hasNotStayPoint(TempPointList tempPointList) {
         for (int i = tempPointList.getSize() - 2; i >= 0; i--) {
-            double distance = calculateDistance.calculateDistance(tempPointList.getPointList().get(tempPointList.getSize() - 1),
+            double distance = CalculateDistance.calculateDistance(tempPointList.getPointList().get(tempPointList.getSize() - 1),
                     tempPointList.getPointList().get(i));
             if (distance > maxD) {
                 long t = tempPointList.getPointList().get(tempPointList.getSize()-1).ingestionTime -
@@ -184,12 +184,12 @@ public class mySts extends KeyedProcessFunction<String, gpsPoint, Object> {
      * @Description 有驻留点处理过程
      * @param tempPointList 临时存储输入点列表
      */
-    public void hasStayPoint(tempPointList tempPointList) {
-        int t = findT.findT(tempPointList.pointList, minT);
+    public void hasStayPoint(TempPointList tempPointList) {
+        int t = FindT.findT(tempPointList.pointList, minT);
         if (t <= tempPointList.getStayPointFlag) {
             int flag = 0;
             for (int i = tempPointList.getSize() - 2; i >= t; i--) {
-                double distance = calculateDistance.calculateDistance(tempPointList.getPointList().get(tempPointList.getSize() - 1),
+                double distance = CalculateDistance.calculateDistance(tempPointList.getPointList().get(tempPointList.getSize() - 1),
                         tempPointList.getPointList().get(i));
                 if (distance >= maxD) {
                     //确认构成不了

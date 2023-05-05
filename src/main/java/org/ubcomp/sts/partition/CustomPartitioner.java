@@ -2,13 +2,13 @@ package org.ubcomp.sts.partition;
 
 import org.apache.flink.api.common.functions.Partitioner;
 import org.apache.flink.api.java.functions.KeySelector;
-import org.ubcomp.sts.objects.gpsPoint;
+import org.ubcomp.sts.objects.GpsPoint;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class customPartitioner<T> implements KeySelector<T, String>, Partitioner<String> {
+public class CustomPartitioner<T> implements KeySelector<T, String>, Partitioner<String> {
 
     private final Map<Integer, Long> partitionKeyCount = new HashMap<>();
 
@@ -36,9 +36,9 @@ public class customPartitioner<T> implements KeySelector<T, String>, Partitioner
 
     @Override
     public String getKey(T value) throws Exception {
-        if (value instanceof gpsPoint) {
+        if (value instanceof GpsPoint) {
             // 获取key值
-            return ((gpsPoint) value).tid;
+            return ((GpsPoint) value).tid;
         }
         // 如果元素不是gpsPoint类型，则返回随机字符串
         return UUID.randomUUID().toString();

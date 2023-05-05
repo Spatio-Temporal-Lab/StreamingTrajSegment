@@ -1,13 +1,13 @@
 package org.ubcomp.sts.index;
 
 
-import org.ubcomp.sts.objects.gpsPoint;
+import org.ubcomp.sts.objects.GpsPoint;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class uGird implements Serializable {
+public class Gird implements Serializable {
     private static double lng1 = 76;
     private static double lng2 = 123;
     private static double lat1 = 21;
@@ -24,7 +24,7 @@ public class uGird implements Serializable {
     static double deltaLat = 1.4308110152011678E-4;
                     //1.4308110152011678E-4;
 
-    public uGird(){}
+    public Gird(){}
 
     public static List calUGird(double lat, double lng){
         double LONCOL = Math.floor( (lng - (lng1 - deltaLon)/2)/deltaLon  );
@@ -35,15 +35,15 @@ public class uGird implements Serializable {
         return a;
     }
 
-    public static int inArea(gpsPoint p0,gpsPoint p1){
+    public static int inArea(GpsPoint p0, GpsPoint p1){
         if (p0.flag == false){
-            List<Double> aa = uGird.calUGird(p0.lat, p0.lng);
+            List<Double> aa = Gird.calUGird(p0.lat, p0.lng);
             p0.LATCOL = aa.get(0);
             p0.LONCOL = aa.get(1);
             p0.flag = true;
         }
         if (p1.flag == false){
-            List<Double> aa = uGird.calUGird(p1.lat, p1.lng);
+            List<Double> aa = Gird.calUGird(p1.lat, p1.lng);
             p1.LATCOL = aa.get(0);
             p1.LONCOL = aa.get(1);
             p1.flag = true;
