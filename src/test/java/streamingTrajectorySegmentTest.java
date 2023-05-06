@@ -1,10 +1,9 @@
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.ubcomp.sts.dataSource.SourceRel;
-import org.ubcomp.sts.objects.GpsPoint;
-import org.ubcomp.sts.operators.ProcessFunctionBase;
-import org.ubcomp.sts.partition.CustomPartitioner;
+import org.ubcomp.sts.datasource.SourceRel;
+import org.ubcomp.sts.object.GpsPoint;
+import org.ubcomp.sts.operator.*;
 
 
 /**
@@ -23,8 +22,16 @@ public class streamingTrajectorySegmentTest {
         DataStreamSource<GpsPoint> GPSStream = env.addSource(new SourceRel());
 
         //keyby 并 进行分段
-        SingleOutputStreamOperator<Object> keyedStream = GPSStream.keyBy(new CustomPartitioner<>())
-                .process(new ProcessFunctionBase(45, 1200000));
+        SingleOutputStreamOperator<Object> keyedStream = GPSStream.keyBy(data -> data.tid)
+                .process(new ProcessFunction(45, 1200000));
+        SingleOutputStreamOperator<Object> keyedStream2 = GPSStream.keyBy(data -> data.tid)
+                .process(new ProcessFunctionMergeDistance(45, 1200000));
+        SingleOutputStreamOperator<Object> keyedStream3 = GPSStream.keyBy(data -> data.tid)
+                .process(new ProcessFunctionMergeDistanceGird(45, 1200000));
+        SingleOutputStreamOperator<Object> keyedStream4 = GPSStream.keyBy(data -> data.tid)
+                .process(new ProcessFunctionBaselineSws());
+        SingleOutputStreamOperator<Object> keyedStream5 = GPSStream.keyBy(data -> data.tid)
+                .process(new ProcessFunctionBaselineSrd());
         //flink执行
         env.execute();
 

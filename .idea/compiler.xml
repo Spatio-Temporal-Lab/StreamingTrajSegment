@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="StreamingTrajSegment1" />
+        <module name="StreamingTrajSegment" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="StreamingTrajSegment1" target="1.8" />
+      <module name="StreamingTrajSegment" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

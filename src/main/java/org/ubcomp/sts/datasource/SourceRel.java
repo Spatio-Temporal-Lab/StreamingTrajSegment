@@ -1,7 +1,7 @@
-package org.ubcomp.sts.dataSource;
+package org.ubcomp.sts.datasource;
 
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
-import org.ubcomp.sts.objects.GpsPoint;
+import org.ubcomp.sts.object.GpsPoint;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,14 +10,12 @@ import java.io.InputStreamReader;
 import java.util.Objects;
 
 /**
- * Create data source
- *
  * @author syy
  **/
 
 public class SourceRel implements SourceFunction<GpsPoint> {
-    // 声明一个布尔变量，作为控制数据生成的标识位
-    private Boolean running = true;
+
+    private static final int NUM_COUNT = 100000;
 
     @Override
     public void run(SourceContext<GpsPoint> ctx) throws Exception {
@@ -25,14 +23,14 @@ public class SourceRel implements SourceFunction<GpsPoint> {
         try (InputStream in = SourceRel.class.getClassLoader().getResourceAsStream("wh1000");
              BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(in)))) {
             String trajStr;
-            int count =0;
-            int num =0;
-            while ((trajStr = br.readLine()) != null && num <=100000) {
+            int count = 0;
+            int num = 0;
+            while ((trajStr = br.readLine()) != null && num <= NUM_COUNT) {
                 num++;
                 count++;
-                String[] result = trajStr.replace("\'","")
-                        .replace("[","").replace("]","").
-                        replace(" ","").split(",");
+                String[] result = trajStr.replace("'", "")
+                        .replace("[", "").replace("]", "").
+                        replace(" ", "").split(",");
                 String t1 = result[0];
                 String t2 = result[1];
                 String lng = result[4];
@@ -46,9 +44,8 @@ public class SourceRel implements SourceFunction<GpsPoint> {
                         time,
                         0);
                 ctx.collect(point);
-                //Thread.sleep(100);
             }
-            System.out.println("count: "+count);
+            System.out.println("count: " + count);
         } catch (IOException e) {
             throw new RuntimeException("Generate trajectory error: " + e.getMessage());
         }
@@ -58,7 +55,6 @@ public class SourceRel implements SourceFunction<GpsPoint> {
 
     @Override
     public void cancel() {
-        running = false;
     }
 
 }

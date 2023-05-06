@@ -1,4 +1,4 @@
-package org.ubcomp.sts.objects;
+package org.ubcomp.sts.object;
 
 import org.locationtech.jts.geom.Point;
 
@@ -7,8 +7,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /**
- * Create gps point data model
- *
  * @author syy
  **/
 
@@ -23,8 +21,8 @@ public class GpsPoint {
     //时间戳
     public long ingestionTime;
     public Point point;
-    public double LONCOL;
-    public double LATCOL;
+    public double lonCol;
+    public double latCol;
     public boolean flag = false;
 
     //构造方法
@@ -48,6 +46,7 @@ public class GpsPoint {
         //this.LATCOL = aa.get(0);
         //this.LONCOL = aa.get(1);
     }
+
     public GpsPoint(double lng, double lat, String tid, long ingestionTime, long a) throws ParseException {
         //GeometryFactory geofact = new GeometryFactory();
         //CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:4326");
