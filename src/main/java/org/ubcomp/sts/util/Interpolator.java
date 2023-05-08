@@ -1,5 +1,6 @@
 package org.ubcomp.sts.util;
 
+import org.apache.commons.math3.stat.regression.SimpleRegression;
 import org.ubcomp.sts.object.GpsPoint;
 
 import java.io.Serializable;
@@ -10,39 +11,43 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * @author syy
- */
 public class Interpolator implements Serializable {
     public Interpolator() {
     }
 
-    public List<GpsPoint> interpolatePoints(List<GpsPoint> points, GpsPoint newPoint) throws ParseException {
+    public static List<GpsPoint> interpolatePoints(List<GpsPoint> points, GpsPoint newPoint) throws ParseException {
 
         GpsPoint prevPoint1 = points.get(0);
         GpsPoint prevPoint2 = points.get(1);
         GpsPoint prevPoint3 = points.get(2);
         List<GpsPoint> interpolatedPoints = new ArrayList<>();
+
+        // 计算插值个数
         long timeDiff1 = prevPoint2.ingestionTime - prevPoint1.ingestionTime;
         long timeDiff2 = prevPoint3.ingestionTime - prevPoint2.ingestionTime;
-        long avgTimeDiff = (timeDiff1 + timeDiff2) / 2;
-        long timeDiff = newPoint.ingestionTime - prevPoint3.ingestionTime;
-        int numInterpolatedPoints;
-        if (avgTimeDiff == 0) {
-            numInterpolatedPoints = 0;
-        } else {
-            numInterpolatedPoints = (int) ((newPoint.ingestionTime - prevPoint3.ingestionTime) / avgTimeDiff) - 1;
-        }
-        if (numInterpolatedPoints <= 0) {
+        if (timeDiff1 == 0 || timeDiff2 == 0) {
             interpolatedPoints.add(newPoint);
             return interpolatedPoints;
         }
+        long avgTimeDiff = 15000;
+        long timeDiff = newPoint.ingestionTime - prevPoint3.ingestionTime;
+        int numInterpolatedPoints;
+        numInterpolatedPoints = (int) ((newPoint.ingestionTime - prevPoint3.ingestionTime) / avgTimeDiff) - 1;
+        if (numInterpolatedPoints <= 0) {
+            // 如果插值个数小于等于0，则不需要插值，直接返回
+            interpolatedPoints.add(newPoint);
+            return interpolatedPoints;
+        }
+
+        // 计算每个插值点的时间戳
         long step = timeDiff / (numInterpolatedPoints + 1);
         List<Long> interpolatedTimestamps = new ArrayList<>();
         for (int i = 0; i < numInterpolatedPoints; i++) {
             long interpolatedTimestamp = prevPoint3.ingestionTime + (i + 1) * step;
             interpolatedTimestamps.add(interpolatedTimestamp);
         }
+
+        // 计算每个插值点的经纬度
         double deltaIngestionTime1 = prevPoint2.ingestionTime - prevPoint1.ingestionTime;
         double deltaIngestionTime2 = prevPoint3.ingestionTime - prevPoint2.ingestionTime;
         for (long interpolatedTimestamp : interpolatedTimestamps) {
@@ -50,32 +55,29 @@ public class Interpolator implements Serializable {
             double ratio1 = (double) (prevPoint2.ingestionTime - interpolatedTimestamp) / deltaIngestionTime1;
             double interpolatedLat = (prevPoint1.lat + prevPoint2.lat * ratio1 + prevPoint3.lat * ratio2) / (1 + ratio1 + ratio2);
             double interpolatedLng = (prevPoint1.lng + prevPoint2.lng * ratio1 + prevPoint3.lng * ratio2) / (1 + ratio1 + ratio2);
-            interpolatedPoints.add(new GpsPoint(interpolatedLng, interpolatedLat, newPoint.tid, new Timestamp(interpolatedTimestamp).toString(), 0));
+            interpolatedPoints.add(new GpsPoint(interpolatedLng, interpolatedLat, newPoint.tid, interpolatedTimestamp, 0));
         }
+        // 将插值点和最新点加入结果列表并返回
         interpolatedPoints.add(newPoint);
         return interpolatedPoints;
     }
 
 
-    public GpsPoint interpolatePosition(List<GpsPoint> points, long t) throws ParseException {
-        GpsPoint p1 = points.get(0);
-        GpsPoint p2 = points.get(1);
-        GpsPoint p3 = points.get(2);
-        long t1 = p1.ingestionTime;
-        long t2 = p2.ingestionTime;
-        long t3 = p3.ingestionTime;
-        double dt1 = t - t1;
-        double dt2 = t - t2;
-        double dt3 = t - t3;
-        double w1 = dt2 * dt3 / ((t1 - t2) * (t1 - t3));
-        double w2 = dt1 * dt3 / ((t2 - t1) * (t2 - t3));
-        double w3 = dt1 * dt2 / ((t3 - t1) * (t3 - t2));
-        double latInterpolated = w1 * p1.lat + w2 * p2.lat + w3 * p3.lat;
-        double lngInterpolated = w1 * p1.lng + w2 * p2.lng + w3 * p3.lng;
-        String tid = p1.tid;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String ingestionTime = formatter.format(new Date(t));
-        return new GpsPoint(lngInterpolated, latInterpolated, tid, ingestionTime, 0);
+    public static GpsPoint interpolatePosition(List<GpsPoint> points, long t) throws ParseException {
+
+        long tf = points.get(0).ingestionTime;
+
+        SimpleRegression regression1_y = new SimpleRegression();
+        for (GpsPoint point : points) {
+            regression1_y.addData(point.ingestionTime - tf, point.lng);
+        }
+        double p_f_y = regression1_y.predict(t - tf);
+        SimpleRegression regression1_x = new SimpleRegression();
+        for (GpsPoint point : points) {
+            regression1_x.addData(point.ingestionTime - tf, point.lat);
+        }
+        double p_f_x = regression1_x.predict(t - tf);
+        return new GpsPoint(p_f_y, p_f_x, points.get(0).tid, t, 0);
     }
 
 }
