@@ -1,19 +1,23 @@
-package org.ubcomp.sts.objects;
+package org.ubcomp.sts.object;
 
-import org.ubcomp.sts.tlof.StreamLOF;
+import org.ubcomp.sts.method.streamlof.StreamLof;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TempFlag implements Serializable {
+/**
+ * @author syy
+ */
+public class Container implements Serializable {
 
-    public TempFlag(){}
+    public Container() {
+    }
 
     public int count = 0;
     public List<GpsPoint> latePoints = new ArrayList<>();
     public List<GpsPoint> tempPoints = new ArrayList<>();
-    public GpsPoint tempPoint ;
+    public GpsPoint tempPoint;
 
     public int i = 1;
     public double radius = 0;
@@ -22,5 +26,5 @@ public class TempFlag implements Serializable {
     public int nPoints = 1;
     public GpsPoint currentCentroid;
 
-    public StreamLOF lof = new StreamLOF(10, 50);
+    public StreamLof lof = new StreamLof(10, 50);
 }

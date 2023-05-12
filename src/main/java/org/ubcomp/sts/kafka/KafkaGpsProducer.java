@@ -2,11 +2,17 @@ package org.ubcomp.sts.kafka;
 
 import java.io.*;
 import java.util.*;
+
 import org.apache.kafka.clients.producer.*;
 
-public class KafkaGPSProducer {
+/**
+ * @author syy
+ */
+public class KafkaGpsProducer {
 
-    public static void main(String[] args) throws Exception{
+    private final static int COUNT_NUM = 100;
+
+    public static void main(String[] args) throws Exception {
 
         String topicName = "gps_data_topic";
         Properties props = new Properties();
@@ -24,14 +30,12 @@ public class KafkaGPSProducer {
         Producer<String, String> producer = new KafkaProducer<>(props);
 
         // 遍历读取所有文本文件
-        for(int i = 1; i <= 100; i++){
-            //String fileName = "gps_data_" + i + ".txt";
+        for (int i = 1; i <= COUNT_NUM; i++) {
             String fileName = "D:\\stdata\\projects\\sts4\\src\\main\\resources\\taxi.txt";
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
             String line = reader.readLine();
 
-            // 发送每个GPS点到Kafka
-            while(line != null){
+            while (line != null) {
                 String[] fields = line.split(",");
                 String lat = fields[0];
                 String lon = fields[1];

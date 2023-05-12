@@ -1,38 +1,28 @@
-package org.ubcomp.sts.utils;
+package org.ubcomp.sts.util;
 
-import org.ubcomp.sts.objects.GpsPoint;
+import org.ubcomp.sts.object.GpsPoint;
 
 public class CalculateDistance {
-
-    /**
-     * Return distance between two points
-     *
-     * @return distance between two points
-     * @p p1 previous point
-     * @p p2 current Point
-     * @author syy
-     **/
     public static double calculateDistance(GpsPoint p1, GpsPoint p2) {
-        double lat1 = p1.lat;
+        /*double lat1 = p1.lat;
         double lat2 = p2.lat;
         double lng1 = p1.lng;
         double lng2 = p2.lng;
-
         double radLat1 = rad(lat1);
         double radLat2 = rad(lat2);
-        double a = radLat1 - radLat2;
-        double b = rad(lng1) - rad(lng2);
-        double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2)
+        double diffLat = radLat1 - radLat2;
+        double diffLng = rad(lng1) - rad(lng2);
+        double distance = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(diffLat / 2), 2)
                 + Math.cos(radLat1) * Math.cos(radLat2)
-                * Math.pow(Math.sin(b / 2), 2)));
+                * Math.pow(Math.sin(diffLng / 2), 2)));
 
-        s = s * 6378.137;
-        s = Math.round(s * 10000d) / 10000d;
-        s = s * 1000;
+        distance = distance * 6378.137;
+        distance = Math.round(distance * 10000d) / 10000d;
+        distance = distance * 1000;
 
-        return s+1e-8;
+        return distance + 1e-8;*/
 
-        /*double radLat1 = Math.toRadians(p1.lat);
+        double radLat1 = Math.toRadians(p1.lat);
         double radLon1 = Math.toRadians(p1.lng);
         double radLat2 = Math.toRadians(p2.lat);
         double radLon2 = Math.toRadians(p2.lng);
@@ -42,8 +32,7 @@ public class CalculateDistance {
 
         double distance = Math.sqrt(Math.pow(deltaLat, 2) + Math.pow(deltaLon, 2)) *  6378.137 * 1000+ 1e-8;
 
-        return distance;*/
-
+        return distance;
 
 
     }

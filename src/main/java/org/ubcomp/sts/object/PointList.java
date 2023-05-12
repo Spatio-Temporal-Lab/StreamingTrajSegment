@@ -1,14 +1,12 @@
-package org.ubcomp.sts.objects;
+package org.ubcomp.sts.object;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Create temporary gps point list data model
- *
  * @author syy
  **/
-public class TempPointList implements Serializable {
+public class PointList implements Serializable {
 
     //temporary gps point list
     public ArrayList<GpsPoint> pointList;
@@ -19,18 +17,13 @@ public class TempPointList implements Serializable {
     public int stayPointEnd = 0;
     public int getStayPointFlag = -1;
 
-    public TempPointList() {
-    }
-    public TempPointList(boolean a) {
-        pointList = new ArrayList<GpsPoint>();
+    public PointList() {
     }
 
-    /**
-     * add new point to temporary gps point list
-     *
-     * @p p new gps point
-     * @author syy
-     **/
+    public PointList(boolean a) {
+        pointList = new ArrayList<>();
+    }
+
     public void add(GpsPoint p) {
         pointList.add(p);
     }
@@ -39,6 +32,7 @@ public class TempPointList implements Serializable {
         return pointList;
     }
 
-
-    public int getSize() { return pointList.size(); }
+    public int getSize() {
+        return pointList.size();
+    }
 }
