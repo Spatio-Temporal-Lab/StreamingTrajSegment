@@ -1,10 +1,11 @@
 package org.ubcomp.sts.operator;
 
 
-import org.ubcomp.sts.method.streamlof.StreamLof;
+import org.ubcomp.sts.method.streamlof.StreamAnomalyDetection;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.Container;
 import org.ubcomp.sts.object.PointList;
+import org.ubcomp.sts.util.Interpolator;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -16,8 +17,8 @@ import static org.ubcomp.sts.method.sws.Sws.processSws;
  */
 public class ProcessFunctionBaselineSws extends AbstractProcessFunction {
 
-    private static final int W = 14;
-    private static final int ERROR = 7;
+    private static final int W = 7;
+    private static final int ERROR = 5000;
 
     public ProcessFunctionBaselineSws() {
         super();
@@ -25,21 +26,29 @@ public class ProcessFunctionBaselineSws extends AbstractProcessFunction {
 
 
     @Override
-    public long process(PointList pointList, GpsPoint point, StreamLof lof, Container container, long runtime) throws ParseException {
+    public long process(PointList pointList, GpsPoint point, StreamAnomalyDetection lof, Container container, long runtime) throws ParseException {
 
         pointList.add(point);
         double score = lof.update(point);
-        if (score > 30 && score < 10000) {
+        if (score > 10 && score < 10000) {
+            if (pointList.getSize() > 4) {
+                GpsPoint p = Interpolator.interpolatePosition(pointList.pointList.subList(
+                        pointList.getSize() - 4, pointList.getSize() - 1), point.ingestionTime);
+                pointList.pointList.remove(pointList.getSize() - 1);
+                pointList.add(p);
+                lof.deletePoint();
+                lof.update(p);
+            }
         }
-        long startTime = System.nanoTime();
+        //long startTime = System.nanoTime();
         if (pointList.getSize() > W) {
             double error = processSws(pointList.getPointList().subList(pointList.getSize() - W, pointList.getSize()));
             if (error > ERROR) {
                 pointList.pointList = new ArrayList<>();
             }
         }
-        long endTime = System.nanoTime();
-        runtime += endTime - startTime;
+        //long endTime = System.nanoTime();
+        //runtime += endTime - startTime;
         return runtime;
     }
 

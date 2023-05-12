@@ -20,7 +20,7 @@ public class Spds implements SpdsAlgorithm, Serializable {
                 double distance = CalculateDistance.calculateDistance(pointList.getPointList().get(pointList.getSize() - 1),
                         pointList.getPointList().get(i));
                 if (distance >= maxD) {
-                    // System.out.println("驻留点1："+ tempPointList.getPointList().subList(0,tempPointList.getStayPointFlag));
+                    //System.out.println("驻留点1："+ pointList.getPointList().subList(0,pointList.getStayPointFlag));
                     pointList.pointList = new ArrayList<>(pointList.getPointList()
                             .subList(pointList.getStayPointFlag, pointList.getSize()));
                     pointList.hasStayPoint = false;
@@ -35,7 +35,7 @@ public class Spds implements SpdsAlgorithm, Serializable {
                 pointList.getStayPointFlag = pointList.getSize();
             }
         } else {
-            //System.out.println("驻留点2："+ tempPointList.getPointList().subList(0,tempPointList.getStayPointFlag));
+            //System.out.println("驻留点2："+ pointList.getPointList().subList(0,pointList.getStayPointFlag));
             pointList.pointList = new ArrayList<>(pointList.getPointList()
                     .subList(pointList.getStayPointFlag, pointList.getSize()));
             pointList.hasStayPoint = false;

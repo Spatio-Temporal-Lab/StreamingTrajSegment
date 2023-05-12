@@ -1,10 +1,13 @@
 package org.ubcomp.sts.operator;
 
 import org.ubcomp.sts.method.spds.Spds;
-import org.ubcomp.sts.method.streamlof.StreamLof;
+import org.ubcomp.sts.method.streamlof.StreamAnomalyDetection;
 import org.ubcomp.sts.object.Container;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
+import org.ubcomp.sts.util.Interpolator;
+
+import java.text.ParseException;
 
 /**
  * @author syy
@@ -23,28 +26,42 @@ public class ProcessFunction extends AbstractProcessFunction {
     }
 
     @Override
-    public long process(PointList pointList, GpsPoint point, StreamLof lof, Container container, long runtime) {
+    public long process(PointList pointList, GpsPoint point, StreamAnomalyDetection lof, Container container, long runtime) throws ParseException {
         if (!pointList.hasStayPoint) {
             //将点加入临时列表中
             pointList.add(point);
             double score = lof.update(point);
             if (score > 30 && score < 10000) {
-
+                if (pointList.getSize() > 4) {
+                    GpsPoint p = Interpolator.interpolatePosition(pointList.pointList.subList(
+                            pointList.getSize() - 4, pointList.getSize() - 1), point.ingestionTime);
+                    pointList.pointList.remove(pointList.getSize() - 1);
+                    pointList.add(p);
+                    lof.deletePoint();
+                    lof.update(p);
+                }
             }
-            long startTime = System.nanoTime();
+            //long startTime = System.nanoTime();
             spds.hasNotStayPoints(pointList, maxD, minT);
-            long endTime = System.nanoTime();
-            runtime += endTime - startTime;
+            //long endTime = System.nanoTime();
+           //runtime += endTime - startTime;
         } else {
             pointList.add(point);
             double score = lof.update(point);
             if (score > 30 && score < 10000) {
-
+                if (pointList.getSize() > 4) {
+                    GpsPoint p = Interpolator.interpolatePosition(pointList.pointList.subList(
+                            pointList.getSize() - 4, pointList.getSize() - 1), point.ingestionTime);
+                    pointList.pointList.remove(pointList.getSize() - 1);
+                    pointList.add(p);
+                    lof.deletePoint();
+                    lof.update(p);
+                }
             }
-            long startTime = System.nanoTime();
+            //long startTime = System.nanoTime();
             spds.hasStayPoints(pointList, maxD, minT);
-            long endTime = System.nanoTime();
-            runtime += endTime - startTime;
+            //long endTime = System.nanoTime();
+            //runtime += endTime - startTime;
         }
         return runtime;
     }

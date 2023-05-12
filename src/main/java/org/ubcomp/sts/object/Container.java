@@ -1,6 +1,6 @@
 package org.ubcomp.sts.object;
 
-import org.ubcomp.sts.method.streamlof.StreamLof;
+import org.ubcomp.sts.method.streamlof.StreamAnomalyDetection;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,5 +26,5 @@ public class Container implements Serializable {
     public int nPoints = 1;
     public GpsPoint currentCentroid;
 
-    public StreamLof lof = new StreamLof(10, 50);
+    public StreamAnomalyDetection lof = new StreamAnomalyDetection(20);
 }

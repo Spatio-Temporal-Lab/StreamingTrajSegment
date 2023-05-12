@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 /**
  * @author syy
  */
-public class StreamLof implements Serializable {
+public class StreamLof1 implements Serializable {
 
     public int k;
     public int w;
@@ -21,10 +21,10 @@ public class StreamLof implements Serializable {
     public boolean isLastPoint = true;
     public List<Double> lastPointDistances;
 
-    public StreamLof() {
+    public StreamLof1() {
     }
 
-    public StreamLof(int k, int w) {
+    public StreamLof1(int k, int w) {
         this.k = k;
         this.w = w;
         this.dataPoints = new ArrayList<>();
