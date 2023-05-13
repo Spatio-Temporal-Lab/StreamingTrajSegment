@@ -96,10 +96,10 @@ public abstract class AbstractProcessFunction extends KeyedProcessFunction<Strin
         double processingTime = (double) runtime / slotNum;
         double throughput = (double) countPoint / runtime * 1000;
         String name = printResult();
-        //System.out.println(name+":Average processing time: " + (double) runtime / countPoint + " ms/record");
+        System.out.println(name+":Average processing time: " + (double) runtime / countPoint + " ms/record");
         System.out.println(name + ":Processing time: " + processingTime + " ms");
-        //System.out.println(name+":Throughput: " + throughput + " records/s");
-        //System.out.println(name+":Records；" + countPoint);
+        System.out.println(name+":Throughput: " + throughput + " records/s");
+        System.out.println(name+":Records；" + countPoint);
     }
 
 
