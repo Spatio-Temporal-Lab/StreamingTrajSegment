@@ -19,11 +19,6 @@ public class StreamingTrajectorySegmentTest {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
 
-        DataStreamSource<GpsPoint> GPSStream2 = env.addSource(new SourceRel());
-        SingleOutputStreamOperator<Object> keyedStream3 = GPSStream2.keyBy(data -> data.tid)
-                .process(new ProcessFunctionMergeDistanceGird(45, 1200000));
-        JobExecutionResult execute2 = env.execute("2");
-
         DataStreamSource<GpsPoint> GPSStream = env.addSource(new SourceRel());
         SingleOutputStreamOperator<Object> keyedStream = GPSStream.keyBy(data -> data.tid)
                 .process(new ProcessFunction(45, 1200000));
@@ -33,6 +28,11 @@ public class StreamingTrajectorySegmentTest {
         SingleOutputStreamOperator<Object> keyedStream2 = GPSStream1.keyBy(data -> data.tid)
                 .process(new ProcessFunctionMergeDistance(45, 1200000));
         JobExecutionResult execute1 = env.execute("1");
+
+        DataStreamSource<GpsPoint> GPSStream2 = env.addSource(new SourceRel());
+        SingleOutputStreamOperator<Object> keyedStream3 = GPSStream2.keyBy(data -> data.tid)
+                .process(new ProcessFunctionMergeDistanceGird(45, 1200000));
+        JobExecutionResult execute2 = env.execute("2");
 
         DataStreamSource<GpsPoint> GPSStream3 = env.addSource(new SourceRel());
         SingleOutputStreamOperator<Object> keyedStream4 = GPSStream3.keyBy(data -> data.tid)
