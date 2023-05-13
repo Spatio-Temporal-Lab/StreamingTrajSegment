@@ -15,19 +15,19 @@ import java.text.ParseException;
 public class ProcessFunctionBaselineSrd extends AbstractProcessFunction {
 
     private static final double MIN_R = 10000;
-    private static final double MIN_DENSITY = 0.5;
+    private static final double MIN_DENSITY =5e-6 ;
 
     public ProcessFunctionBaselineSrd() {
         super();
     }
 
     @Override
-    public long process(PointList pointList, GpsPoint point, StreamAnomalyDetection lof, Container container, long runtime) throws ParseException {
+    public long process(PointList pointList, GpsPoint point, StreamAnomalyDetection lof, Container container, long runtime, int countPoints) throws ParseException {
 
         pointList.add(point);
         double score = lof.update(point);
-        if (score > 30 && score < 10000) {
-            if (pointList.getSize() > 4) {
+        if (score > 10 && score < 10000) {
+            if (pointList.getSize() >= 4) {
                 GpsPoint p = Interpolator.interpolatePosition(pointList.pointList.subList(
                         pointList.getSize() - 4, pointList.getSize() - 1), point.ingestionTime);
                 pointList.pointList.remove(pointList.getSize() - 1);
@@ -40,7 +40,7 @@ public class ProcessFunctionBaselineSrd extends AbstractProcessFunction {
         Srd.processSrd(pointList, point, container, MIN_R, MIN_DENSITY);
         //long endTime = System.nanoTime();
         // += endTime - startTime;
-        return runtime;
+        return 0;
     }
 
     @Override

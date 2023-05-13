@@ -12,6 +12,7 @@ import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 import org.ubcomp.sts.util.Interpolator;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public abstract class AbstractProcessFunction extends KeyedProcessFunction<Strin
     private ValueState<Container> containerValueState;
     private int countPoint;
     private long runtime;
+    private long latency;
 
     public AbstractProcessFunction() {
     }
@@ -41,12 +43,14 @@ public abstract class AbstractProcessFunction extends KeyedProcessFunction<Strin
         );
         countPoint = 0;
         runtime = 0;
+        latency = 0;
     }
 
 
     @Override
     public void processElement(GpsPoint gpsPoint, KeyedProcessFunction<String, GpsPoint, Object>.Context context, Collector<Object> collector) throws Exception {
         long startTime = System.nanoTime();
+        long lateTime = 0;
         PointList pointList = pointListValueState.value();
         if (pointList == null) {
             pointListValueState.update(new PointList(true));
@@ -61,7 +65,7 @@ public abstract class AbstractProcessFunction extends KeyedProcessFunction<Strin
         /*long endTime = System.nanoTime();
         runtime += endTime - startTime;*/
 
-        if (pointList.getSize() >= 3  && gpsPoint.ingestionTime -
+        if (pointList.getSize() >= 3 && gpsPoint.ingestionTime -
                 pointList.pointList.get(pointList.getSize() - 1).ingestionTime >= 40000) {
             List<GpsPoint> pp = Interpolator.interpolatePoints(pointList.pointList.subList(
                     pointList.getSize() - 3, pointList.getSize()), gpsPoint);
@@ -69,9 +73,9 @@ public abstract class AbstractProcessFunction extends KeyedProcessFunction<Strin
                 pointList.add(p);
                 double score = streamLof.update(p);
             }
-        }else {
+        } else {
             //startTime = System.nanoTime();
-            process(pointList, gpsPoint, streamLof, container, runtime);
+            lateTime = process(pointList, gpsPoint, streamLof, container, runtime, countPoint);
             //endTime = System.nanoTime();
             //runtime += endTime - startTime;
         }
@@ -86,24 +90,25 @@ public abstract class AbstractProcessFunction extends KeyedProcessFunction<Strin
         containerValueState.update(container);
         long endTime = System.nanoTime();
         //endTime = System.nanoTime();
-        runtime += endTime - startTime;
+        if (countPoint > 10000){
+            runtime += endTime - startTime;
+            latency += endTime - startTime + lateTime;
+        }
     }
 
     @Override
-    public void close() {
-        int slotNum = 1;
+    public void close() throws IOException {
         runtime = runtime / 1000000;
-        double processingTime = (double) runtime / slotNum;
+        latency = latency / 1000000;
         double throughput = (double) countPoint / runtime * 1000;
         String name = printResult();
-        //System.out.println(name+":Average processing time: " + (double) runtime / countPoint + " ms/record");
-        System.out.println(name + ":Processing time: " + processingTime + " ms");
-        //System.out.println(name+":Throughput: " + throughput + " records/s");
-        //System.out.println(name+":Records；" + countPoint);
+        System.out.println(name + "-Latency: " + (double) latency / countPoint + " ms");
+        System.out.println(name + "-Throughput: " + throughput + " records/s");
+
     }
 
 
-    public abstract long process(PointList pointList, GpsPoint point, StreamAnomalyDetection lof, Container container, long runtime) throws ParseException;
+    public abstract long process(PointList pointList, GpsPoint point, StreamAnomalyDetection lof, Container container, long runtime, int countPoint) throws ParseException;
 
     public abstract String printResult();
 

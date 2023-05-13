@@ -29,11 +29,14 @@ public class Srd implements Serializable {
         radius = Math.max(radius, distance);
         if (radius > minR) {
             double density = nPoints / (Math.PI * radius * radius);
+            //|| pointList.getSize()>5000
             if (density < minDensity) {
                 cutofs.add(i);
                 centroids.add(currentCentroid);
-                pointList.pointList = new ArrayList<>(pointList.pointList.subList(0, pointList.getSize() - 1));
+                pointList.pointList = new ArrayList<>();
+                pointList.add(point);
                 currentCentroid = point;
+                radius = 0;
                 nPoints = 1;
             }
         }
