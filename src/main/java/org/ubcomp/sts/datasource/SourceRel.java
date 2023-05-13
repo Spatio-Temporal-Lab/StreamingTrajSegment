@@ -15,18 +15,18 @@ import java.util.Objects;
 
 public class SourceRel implements SourceFunction<GpsPoint> {
 
-    private static final int NUM_COUNT = 100000;
+    private static final int NUM_COUNT = 10000000;
 
     @Override
     public void run(SourceContext<GpsPoint> ctx) throws Exception {
 
-        try (InputStream in = SourceRel.class.getClassLoader().getResourceAsStream("wh1000");
+        try (InputStream in = SourceRel.class.getClassLoader().getResourceAsStream("whsmall");
              BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(in)))) {
             String trajStr;
             int count = 0;
             int num = 0;
             //&& num <= NUM_COUNT
-            while ((trajStr = br.readLine()) != null || num <= NUM_COUNT ) {
+            while ((trajStr = br.readLine()) != null && num <= NUM_COUNT ) {
                 num++;
                 count++;
                 String[] result = trajStr.replace("'", "")
