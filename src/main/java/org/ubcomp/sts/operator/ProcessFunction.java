@@ -2,7 +2,7 @@ package org.ubcomp.sts.operator;
 
 import org.ubcomp.sts.method.staypointsegment.StayPointSegmentBase;
 import org.ubcomp.sts.method.streamlof.StreamAnomalyDetection;
-import org.ubcomp.sts.object.SrdContainer;
+import org.ubcomp.sts.object.Container;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 import org.ubcomp.sts.util.Interpolator;
@@ -23,7 +23,7 @@ public class ProcessFunction extends AbstractProcessFunction {
     }
 
     @Override
-    public long process(PointList pointList, GpsPoint point, StreamAnomalyDetection lof, SrdContainer container, long runtime, int countPoints) throws ParseException {
+    public long process(PointList pointList, GpsPoint point, StreamAnomalyDetection lof, Container container, long runtime, int countPoints) throws ParseException {
         if (!pointList.hasStayPoint) {
             //将点加入临时列表中
             pointList.add(point);

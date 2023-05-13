@@ -1,7 +1,5 @@
 package org.ubcomp.sts.object;
 
-import org.ubcomp.sts.method.streamlof.StreamAnomalyDetection;
-
 import java.util.ArrayList;
 import java.util.List;
 

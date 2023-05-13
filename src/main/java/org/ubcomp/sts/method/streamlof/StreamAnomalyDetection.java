@@ -17,7 +17,7 @@ public class StreamAnomalyDetection implements Serializable {
     public List<Double> lastPointDistances;
     public List<Double> lrd;
 
-    public StreamAnomalyDetection() {
+    public StreamAnomalyDetection( ) {
     }
 
     public StreamAnomalyDetection(int k) {

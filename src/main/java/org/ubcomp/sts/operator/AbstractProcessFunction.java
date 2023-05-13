@@ -8,7 +8,6 @@ import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
 import org.apache.flink.util.Collector;
 import org.ubcomp.sts.method.streamlof.StreamAnomalyDetection;
 import org.ubcomp.sts.object.Container;
-import org.ubcomp.sts.object.SrdContainer;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 import org.ubcomp.sts.util.Interpolator;
@@ -23,11 +22,11 @@ import java.util.List;
  */
 public abstract class AbstractProcessFunction extends KeyedProcessFunction<String, GpsPoint, Object> {
 
-    private ValueState<PointList> pointListValueState;
-    private ValueState<Container> containerValueState;
-    private int countPoint;
-    private long runtime;
-    private long latency;
+    protected ValueState<PointList> pointListValueState;
+    protected ValueState<Container> containerValueState;
+    protected int countPoint;
+    protected long runtime;
+    protected long latency;
 
     public AbstractProcessFunction() {
     }
@@ -57,7 +56,7 @@ public abstract class AbstractProcessFunction extends KeyedProcessFunction<Strin
         Container container = containerValueState.value();
         if (pointList == null) {
             pointList = new PointList();
-            container = new SrdContainer();
+            container = new Container();
         }
         List<GpsPoint> latePoints = container.latePoints;
         List<GpsPoint> tempPoints = container.unprocessedPoints;
@@ -73,7 +72,7 @@ public abstract class AbstractProcessFunction extends KeyedProcessFunction<Strin
                 streamLof.update(p);
             }
         } else {
-            lateTime = process(pointList, gpsPoint, streamLof, container, runtime, countPoint);
+            lateTime = process(pointList, gpsPoint, streamLof, (Container) container, runtime, countPoint);
         }
 
         /*startTime = System.nanoTime();*/
@@ -104,7 +103,7 @@ public abstract class AbstractProcessFunction extends KeyedProcessFunction<Strin
     }
 
 
-    public abstract long process(PointList pointList, GpsPoint point, StreamAnomalyDetection lof, SrdContainer container, long runtime, int countPoint) throws ParseException;
+    public abstract long process(PointList pointList, GpsPoint point, StreamAnomalyDetection lof, Container container, long runtime, int countPoint) throws ParseException, IOException;
 
     public abstract String printResult();
 
