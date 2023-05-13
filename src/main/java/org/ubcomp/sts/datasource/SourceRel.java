@@ -25,7 +25,8 @@ public class SourceRel implements SourceFunction<GpsPoint> {
             String trajStr;
             int count = 0;
             int num = 0;
-            while ((trajStr = br.readLine()) != null && num <= NUM_COUNT) {
+            //&& num <= NUM_COUNT
+            while ((trajStr = br.readLine()) != null || num <= NUM_COUNT ) {
                 num++;
                 count++;
                 String[] result = trajStr.replace("'", "")
