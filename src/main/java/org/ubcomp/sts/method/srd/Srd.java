@@ -1,6 +1,6 @@
 package org.ubcomp.sts.method.srd;
 
-import org.ubcomp.sts.object.Container;
+import org.ubcomp.sts.object.SrdContainer;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 import org.ubcomp.sts.util.CalculateDistance;
@@ -13,7 +13,7 @@ import java.util.List;
  * @author syy
  */
 public class Srd implements Serializable {
-    public static void processSrd(PointList pointList, GpsPoint point, Container container, double minR, double minDensity) {
+    public static void processSrd(PointList pointList, GpsPoint point, SrdContainer container, double minR, double minDensity) {
         GpsPoint currentCentroid = container.currentCentroid;
         int nPoints = container.nPoints;
         double radius = container.radius;

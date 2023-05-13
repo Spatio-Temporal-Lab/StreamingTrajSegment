@@ -23,29 +23,26 @@ public class KafkaGpsProducer {
         props.put("linger.ms", 1);
         props.put("buffer.memory", 33554432);
         props.put("key.serializer",
-                "org.apache.kafka.common.serialization.StringSerializer");
+            "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer",
-                "org.apache.kafka.common.serialization.StringSerializer");
+            "org.apache.kafka.common.serialization.StringSerializer");
 
-        Producer<String, String> producer = new KafkaProducer<>(props);
-
-        // 遍历读取所有文本文件
-        for (int i = 1; i <= COUNT_NUM; i++) {
-            String fileName = "D:\\stdata\\projects\\sts4\\src\\main\\resources\\taxi.txt";
-            BufferedReader reader = new BufferedReader(new FileReader(fileName));
-            String line = reader.readLine();
-
-            while (line != null) {
-                String[] fields = line.split(",");
-                String lat = fields[0];
-                String lon = fields[1];
-                String msg = lat + "," + lon;
-                producer.send(new ProducerRecord<>(topicName, msg));
-                line = reader.readLine();
+        try (Producer<String, String> producer = new KafkaProducer<>(props)) {
+            // 遍历读取所有文本文件
+            for (int i = 1; i <= COUNT_NUM; i++) {
+                String fileName = "D:\\stdata\\projects\\sts4\\src\\main\\resources\\taxi.txt";
+                try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+                    String line = reader.readLine();
+                    while (line != null) {
+                        String[] fields = line.split(",");
+                        String lat = fields[0];
+                        String lon = fields[1];
+                        String msg = lat + "," + lon;
+                        producer.send(new ProducerRecord<>(topicName, msg));
+                        line = reader.readLine();
+                    }
+                }
             }
-            reader.close();
         }
-
-        producer.close();
     }
 }

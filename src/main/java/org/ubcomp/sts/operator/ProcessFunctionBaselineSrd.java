@@ -3,7 +3,7 @@ package org.ubcomp.sts.operator;
 import org.ubcomp.sts.method.srd.Srd;
 import org.ubcomp.sts.method.streamlof.StreamAnomalyDetection;
 import org.ubcomp.sts.object.GpsPoint;
-import org.ubcomp.sts.object.Container;
+import org.ubcomp.sts.object.SrdContainer;
 import org.ubcomp.sts.object.PointList;
 import org.ubcomp.sts.util.Interpolator;
 
@@ -22,7 +22,7 @@ public class ProcessFunctionBaselineSrd extends AbstractProcessFunction {
     }
 
     @Override
-    public long process(PointList pointList, GpsPoint point, StreamAnomalyDetection lof, Container container, long runtime, int countPoints) throws ParseException {
+    public long process(PointList pointList, GpsPoint point, StreamAnomalyDetection lof, SrdContainer container, long runtime, int countPoints) throws ParseException {
 
         pointList.add(point);
         double score = lof.update(point);
@@ -36,10 +36,7 @@ public class ProcessFunctionBaselineSrd extends AbstractProcessFunction {
                 lof.update(p);
             }
         }
-        //long startTime = System.nanoTime();
         Srd.processSrd(pointList, point, container, MIN_R, MIN_DENSITY);
-        //long endTime = System.nanoTime();
-        // += endTime - startTime;
         return 0;
     }
 

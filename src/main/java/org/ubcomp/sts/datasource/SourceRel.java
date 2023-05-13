@@ -25,13 +25,13 @@ public class SourceRel implements SourceFunction<GpsPoint> {
             String trajStr;
             int count = 0;
             int num = 0;
-            //&& num <= NUM_COUNT
+
             while ((trajStr = br.readLine()) != null && num <= NUM_COUNT ) {
                 num++;
                 count++;
                 String[] result = trajStr.replace("'", "")
-                        .replace("[", "").replace("]", "").
-                        replace(" ", "").split(",");
+                        .replace("[", "").replace("]", "")
+                        .replace(" ", "").split(",");
                 String t1 = result[0];
                 String t2 = result[1];
                 String lng = result[4];
