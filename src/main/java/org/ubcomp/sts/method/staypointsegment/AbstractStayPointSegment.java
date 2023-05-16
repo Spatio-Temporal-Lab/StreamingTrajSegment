@@ -1,9 +1,14 @@
 package org.ubcomp.sts.method.staypointsegment;
 
+import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractStayPointSegment implements Serializable {
     protected PointList pointList;
@@ -21,10 +26,24 @@ public abstract class AbstractStayPointSegment implements Serializable {
     public abstract void processWithoutStayPoints();
 
     protected void breakStayPoint(PointList pointList) {
+        List<GpsPoint> list = pointList.getPointList().subList(0,pointList.stayPointEndLocalIndex);
         pointList.pointList = new ArrayList<>(pointList.getPointList()
             .subList(pointList.stayPointEndLocalIndex, pointList.getSize()));
         pointList.hasStayPoint = false;
         pointList.stayPointEndLocalIndex = -1;
+        String filePath = "output.txt";
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true));
+            for (GpsPoint gpsPoint : list) {
+                String line = gpsPoint.toString();
+                writer.write(line);
+                writer.write(",");
+            }
+            writer.newLine();
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("写入文件时发生错误：" + e.getMessage());
+        }
     }
 
     protected void mergeStayPoint(PointList pointList) {
