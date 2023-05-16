@@ -1,6 +1,6 @@
 package org.ubcomp.sts.operator;
 
-import org.ubcomp.sts.method.spds.SpdsWithDistance;
+import org.ubcomp.sts.method.staypointsegment.StayPointSegmentWithDistanceOpt;
 import org.ubcomp.sts.method.streamlof.StreamAnomalyDetection;
 import org.ubcomp.sts.object.Container;
 import org.ubcomp.sts.object.GpsPoint;
@@ -14,13 +14,11 @@ import java.text.ParseException;
  */
 public class ProcessFunctionMergeDistance extends AbstractProcessFunction {
 
-    private final SpdsWithDistance spdsWithDistance;
     private final double maxD;
     private final long minT;
 
     public ProcessFunctionMergeDistance(double d, long t) {
         super();
-        spdsWithDistance = new SpdsWithDistance();
         maxD = d;
         minT = t;
     }
@@ -34,7 +32,7 @@ public class ProcessFunctionMergeDistance extends AbstractProcessFunction {
             if (score > 10 && score < 10000) {
                 if (pointList.getSize() >= 4) {
                     GpsPoint p = Interpolator.interpolatePosition(pointList.pointList.subList(
-                            pointList.getSize() - 4, pointList.getSize() - 1), point.ingestionTime);
+                        pointList.getSize() - 4, pointList.getSize() - 1), point.ingestionTime);
                     pointList.pointList.remove(pointList.getSize() - 1);
                     pointList.add(p);
                     lof.deletePoint();
@@ -42,7 +40,8 @@ public class ProcessFunctionMergeDistance extends AbstractProcessFunction {
                 }
             }
             //long startTime = System.nanoTime();
-            spdsWithDistance.hasNotStayPoints(pointList, lof.lastPointDistances, maxD, minT);
+            StayPointSegmentWithDistanceOpt stayPointSegment = new StayPointSegmentWithDistanceOpt(pointList, lof.lastPointDistances, maxD, minT);
+            stayPointSegment.processWithoutStayPoints();
             //long endTime = System.nanoTime();
             //runtime += endTime - startTime;
         } else {
@@ -51,7 +50,7 @@ public class ProcessFunctionMergeDistance extends AbstractProcessFunction {
             if (score > 10 && score < 10000) {
                 if (pointList.getSize() >= 4) {
                     GpsPoint p = Interpolator.interpolatePosition(pointList.pointList.subList(
-                            pointList.getSize() - 4, pointList.getSize() - 1), point.ingestionTime);
+                        pointList.getSize() - 4, pointList.getSize() - 1), point.ingestionTime);
                     pointList.pointList.remove(pointList.getSize() - 1);
                     pointList.add(p);
                     lof.deletePoint();
@@ -59,7 +58,8 @@ public class ProcessFunctionMergeDistance extends AbstractProcessFunction {
                 }
             }
             //long startTime = System.nanoTime();
-            spdsWithDistance.hasStayPoints(pointList, lof.lastPointDistances, maxD, minT);
+            StayPointSegmentWithDistanceOpt stayPointSegment = new StayPointSegmentWithDistanceOpt(pointList, lof.lastPointDistances, maxD, minT);
+            stayPointSegment.processWithStayPoints();
             //long endTime = System.nanoTime();
             //runtime += endTime - startTime;
         }

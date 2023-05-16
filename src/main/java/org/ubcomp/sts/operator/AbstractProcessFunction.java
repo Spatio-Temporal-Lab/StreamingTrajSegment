@@ -22,11 +22,11 @@ import java.util.List;
  */
 public abstract class AbstractProcessFunction extends KeyedProcessFunction<String, GpsPoint, Object> {
 
-    private ValueState<PointList> pointListValueState;
-    private ValueState<Container> containerValueState;
-    private int countPoint;
-    private long runtime;
-    private long latency;
+    protected ValueState<PointList> pointListValueState;
+    protected ValueState<Container> containerValueState;
+    protected int countPoint;
+    protected long runtime;
+    protected long latency;
 
     public AbstractProcessFunction() {
     }
@@ -34,12 +34,12 @@ public abstract class AbstractProcessFunction extends KeyedProcessFunction<Strin
     @Override
     public void open(Configuration parameters) {
         pointListValueState = getRuntimeContext().getState(
-                new ValueStateDescriptor<>("pointList",
-                        Types.POJO(PointList.class))
+            new ValueStateDescriptor<>("pointList",
+                Types.POJO(PointList.class))
         );
         containerValueState = getRuntimeContext().getState(
-                new ValueStateDescriptor<>("container",
-                        Types.POJO(Container.class))
+            new ValueStateDescriptor<>("container",
+                Types.POJO(Container.class))
         );
         countPoint = 0;
         runtime = 0;
@@ -48,49 +48,44 @@ public abstract class AbstractProcessFunction extends KeyedProcessFunction<Strin
 
 
     @Override
-    public void processElement(GpsPoint gpsPoint, KeyedProcessFunction<String, GpsPoint, Object>.Context context, Collector<Object> collector) throws Exception {
+    public void processElement(GpsPoint gpsPoint, KeyedProcessFunction<String, GpsPoint, Object>.Context context,
+                               Collector<Object> collector) throws Exception {
         long startTime = System.nanoTime();
         long lateTime = 0;
         PointList pointList = pointListValueState.value();
-        if (pointList == null) {
-            pointListValueState.update(new PointList(true));
-            containerValueState.update(new Container());
-        }
-        pointList = pointListValueState.value();
         Container container = containerValueState.value();
+        if (pointList == null) {
+            pointList = new PointList();
+            container = new Container();
+        }
         List<GpsPoint> latePoints = container.latePoints;
-        List<GpsPoint> tempPoints = container.tempPoints;
-        GpsPoint tempPoint = container.tempPoint;
+        List<GpsPoint> tempPoints = container.unprocessedPoints;
+        GpsPoint tempPoint = container.currentPoint;
         StreamAnomalyDetection streamLof = container.lof;
-        /*long endTime = System.nanoTime();
-        runtime += endTime - startTime;*/
 
         if (pointList.getSize() >= 3 && gpsPoint.ingestionTime -
-                pointList.pointList.get(pointList.getSize() - 1).ingestionTime >= 40000) {
+            pointList.pointList.get(pointList.getSize() - 1).ingestionTime >= 40000) {
             List<GpsPoint> pp = Interpolator.interpolatePoints(pointList.pointList.subList(
-                    pointList.getSize() - 3, pointList.getSize()), gpsPoint);
+                pointList.getSize() - 3, pointList.getSize()), gpsPoint);
             for (GpsPoint p : pp) {
                 pointList.add(p);
-                double score = streamLof.update(p);
+                streamLof.update(p);
             }
         } else {
-            //startTime = System.nanoTime();
-            lateTime = process(pointList, gpsPoint, streamLof, container, runtime, countPoint);
-            //endTime = System.nanoTime();
-            //runtime += endTime - startTime;
+            lateTime = process(pointList, gpsPoint, streamLof, (Container) container, runtime, countPoint);
         }
 
         /*startTime = System.nanoTime();*/
         countPoint++;
         container.latePoints = latePoints;
-        container.tempPoints = tempPoints;
-        container.tempPoint = tempPoint;
+        container.unprocessedPoints = tempPoints;
+        container.currentPoint = tempPoint;
         container.lof = streamLof;
         pointListValueState.update(pointList);
         containerValueState.update(container);
         long endTime = System.nanoTime();
         //endTime = System.nanoTime();
-        if (countPoint > 10000){
+        if (countPoint > 10000) {
             runtime += endTime - startTime;
             latency += endTime - startTime + lateTime;
         }
@@ -108,7 +103,7 @@ public abstract class AbstractProcessFunction extends KeyedProcessFunction<Strin
     }
 
 
-    public abstract long process(PointList pointList, GpsPoint point, StreamAnomalyDetection lof, Container container, long runtime, int countPoint) throws ParseException;
+    public abstract long process(PointList pointList, GpsPoint point, StreamAnomalyDetection lof, Container container, long runtime, int countPoint) throws ParseException, IOException;
 
     public abstract String printResult();
 

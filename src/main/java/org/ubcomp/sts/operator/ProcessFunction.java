@@ -1,6 +1,6 @@
 package org.ubcomp.sts.operator;
 
-import org.ubcomp.sts.method.spds.Spds;
+import org.ubcomp.sts.method.staypointsegment.StayPointSegmentBase;
 import org.ubcomp.sts.method.streamlof.StreamAnomalyDetection;
 import org.ubcomp.sts.object.Container;
 import org.ubcomp.sts.object.GpsPoint;
@@ -13,14 +13,11 @@ import java.text.ParseException;
  * @author syy
  */
 public class ProcessFunction extends AbstractProcessFunction {
-
-    private final Spds spds;
     private final double maxD;
     private final long minT;
 
     public ProcessFunction(double d, long t) {
         super();
-        spds = new Spds();
         maxD = d;
         minT = t;
     }
@@ -42,7 +39,8 @@ public class ProcessFunction extends AbstractProcessFunction {
                 }
             }
             //long startTime = System.nanoTime();
-            spds.hasNotStayPoints(pointList, maxD, minT);
+            StayPointSegmentBase stayPointDetectSegment = new StayPointSegmentBase(pointList, maxD, minT);
+            stayPointDetectSegment.processWithoutStayPoints();
             //long endTime = System.nanoTime();
            //runtime += endTime - startTime;
         } else {
@@ -58,8 +56,9 @@ public class ProcessFunction extends AbstractProcessFunction {
                     lof.update(p);
                 }
             }
+            StayPointSegmentBase stayPointDetectSegment = new StayPointSegmentBase(pointList, maxD, minT);
             //long startTime = System.nanoTime();
-            spds.hasStayPoints(pointList, maxD, minT);
+            stayPointDetectSegment.processWithStayPoints();
             //long endTime = System.nanoTime();
             //runtime += endTime - startTime;
         }

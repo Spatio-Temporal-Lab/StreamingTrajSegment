@@ -23,7 +23,7 @@ public class GpsPoint {
     public Point point;
     public double lonCol;
     public double latCol;
-    public boolean flag = false;
+    public boolean gridFlag = false;
 
     //构造方法
     public GpsPoint() {

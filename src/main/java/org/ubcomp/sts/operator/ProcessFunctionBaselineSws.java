@@ -27,7 +27,7 @@ public class ProcessFunctionBaselineSws extends AbstractProcessFunction {
 
     @Override
     public long process(PointList pointList, GpsPoint point, StreamAnomalyDetection lof, Container container, long runtime, int countPoints) throws ParseException {
-        long latetime = 0;
+        long lateTime = 0;
         pointList.add(point);
         double score = lof.update(point);
         if (score > 10 && score < 10000) {
@@ -40,23 +40,19 @@ public class ProcessFunctionBaselineSws extends AbstractProcessFunction {
                 lof.update(p);
             }
         }
-        //long startTime = System.nanoTime();
         if (pointList.getSize() > W) {
-            latetime = (point.ingestionTime - pointList.pointList.get(pointList.getSize() - 4).ingestionTime)*1000000;
+            lateTime = (point.ingestionTime - pointList.pointList.get(pointList.getSize() - 4).ingestionTime)*1000000;
             double error = processSws(pointList.getPointList().subList(pointList.getSize() - W, pointList.getSize()));
             if (error > ERROR) {
                 pointList.pointList = new ArrayList<>();
             }
         }
-        //long endTime = System.nanoTime();
-        //runtime += endTime - startTime;
-        return latetime;
+        return lateTime;
     }
 
     @Override
     public String printResult() {
         return "Sws";
     }
-
 
 }
