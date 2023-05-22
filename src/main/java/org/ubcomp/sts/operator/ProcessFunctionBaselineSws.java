@@ -17,7 +17,7 @@ import static org.ubcomp.sts.method.sws.Sws.processSws;
  */
 public class ProcessFunctionBaselineSws extends AbstractProcessFunction {
 
-    private static final int W = 7;
+    private static final int W = 21;
     private static final int ERROR = 5000;
 
     public ProcessFunctionBaselineSws() {

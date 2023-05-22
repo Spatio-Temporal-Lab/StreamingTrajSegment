@@ -20,7 +20,7 @@ public class SourceRel implements SourceFunction<GpsPoint> {
     @Override
     public void run(SourceContext<GpsPoint> ctx) throws Exception {
 
-        try (InputStream in = SourceRel.class.getClassLoader().getResourceAsStream("whsmall");
+        try (InputStream in = SourceRel.class.getClassLoader().getResourceAsStream("whsmall.txt");
              BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(in)))) {
             String trajStr;
             int count = 0;
