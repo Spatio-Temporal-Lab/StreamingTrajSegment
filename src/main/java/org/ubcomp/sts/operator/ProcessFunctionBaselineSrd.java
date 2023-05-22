@@ -25,7 +25,7 @@ public class ProcessFunctionBaselineSrd extends AbstractProcessFunction {
 
     private ValueState<SrdContainer> srdContainerValueState;
     private static final double MIN_R = 10000;
-    private static final double MIN_DENSITY = 1e-7;
+    private static final double MIN_DENSITY = 1e-8;
 
     @Override
     public void open(Configuration parameters) {
