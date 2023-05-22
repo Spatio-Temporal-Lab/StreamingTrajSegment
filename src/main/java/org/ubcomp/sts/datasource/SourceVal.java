@@ -24,7 +24,7 @@ public class SourceVal implements SourceFunction<GpsPoint> {
     public void run(SourceContext<GpsPoint> ctx) throws Exception {
         try (
                 InputStream in = SourceVal.class.getClassLoader()
-                        .getResourceAsStream("data");
+                        .getResourceAsStream("data.txt");
                 BufferedReader br = new BufferedReader(
                         new InputStreamReader(Objects.requireNonNull(in))
                 )

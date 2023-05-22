@@ -4,7 +4,10 @@ import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.ubcomp.sts.datasource.SourceRel;
 import org.ubcomp.sts.object.GpsPoint;
-import org.ubcomp.sts.operator.*;
+import org.ubcomp.sts.operator.ProcessFunction;
+import org.ubcomp.sts.operator.ProcessFunctionBaselineSws;
+import org.ubcomp.sts.operator.ProcessFunctionMergeDistance;
+import org.ubcomp.sts.operator.ProcessFunctionMergeDistanceGird;
 
 
 /**
@@ -18,6 +21,7 @@ public class StreamingTrajectorySegmentTest {
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
+
 
         DataStreamSource<GpsPoint> GPSStream = env.addSource(new SourceRel());
         SingleOutputStreamOperator<Object> keyedStream = GPSStream.keyBy(data -> data.tid)

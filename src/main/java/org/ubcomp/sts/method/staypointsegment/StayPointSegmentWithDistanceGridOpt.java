@@ -1,6 +1,6 @@
 package org.ubcomp.sts.method.staypointsegment;
 
-import org.ubcomp.sts.index.Gird;
+import org.ubcomp.sts.index.Grid;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 import org.ubcomp.sts.util.CalculateDistance;
@@ -20,8 +20,10 @@ public class StayPointSegmentWithDistanceGridOpt extends AbstractStayPointSegmen
         this.distances = distances;
     }
 
+
     @Override
     public void processWithStayPoints() {
+
         int inIndex = FindGPSPointsWithInT.findIndex(pointList.pointList, minT);
         // current window has a stay point
         if (inIndex <= pointList.stayPointEndLocalIndex) {
@@ -39,7 +41,7 @@ public class StayPointSegmentWithDistanceGridOpt extends AbstractStayPointSegmen
                         break;
                     }
                 } else {
-                    int diffId = Gird.gridManhattan(pointList.getPointList().get(i), latestGPSPoint);
+                    int diffId = Grid.gridManhattan(pointList.getPointList().get(i), latestGPSPoint);
                     if (diffId >= GREATER_D) {
                         breakStayPoint(pointList);
                         canMerge = false;
@@ -79,7 +81,7 @@ public class StayPointSegmentWithDistanceGridOpt extends AbstractStayPointSegmen
                     break;
                 }
             } else {
-                int diffId = Gird.gridManhattan(pointList.getPointList().get(i), latestGPSPoint);
+                int diffId = Grid.gridManhattan(pointList.getPointList().get(i), latestGPSPoint);
                 if (diffId == VALIDATE_D_1 || diffId == VALIDATE_D_2) {
                     distance = CalculateDistance.calculateDistance(latestGPSPoint, pointList.getPointList().get(i));
                     if (distance > maxD) {

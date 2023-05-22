@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.util.List;
 
 
+
 /**
  * @author syy
  */
@@ -34,13 +35,14 @@ public abstract class AbstractProcessFunction extends KeyedProcessFunction<Strin
     @Override
     public void open(Configuration parameters) {
         pointListValueState = getRuntimeContext().getState(
-            new ValueStateDescriptor<>("pointList",
-                Types.POJO(PointList.class))
+                new ValueStateDescriptor<>("pointList",
+                        Types.POJO(PointList.class))
         );
         containerValueState = getRuntimeContext().getState(
-            new ValueStateDescriptor<>("container",
-                Types.POJO(Container.class))
+                new ValueStateDescriptor<>("container",
+                        Types.POJO(Container.class))
         );
+
         countPoint = 0;
         runtime = 0;
         latency = 0;
@@ -64,9 +66,9 @@ public abstract class AbstractProcessFunction extends KeyedProcessFunction<Strin
         StreamAnomalyDetection streamLof = container.lof;
 
         if (pointList.getSize() >= 3 && gpsPoint.ingestionTime -
-            pointList.pointList.get(pointList.getSize() - 1).ingestionTime >= 40000) {
+                pointList.pointList.get(pointList.getSize() - 1).ingestionTime >= 40000) {
             List<GpsPoint> pp = Interpolator.interpolatePoints(pointList.pointList.subList(
-                pointList.getSize() - 3, pointList.getSize()), gpsPoint);
+                    pointList.getSize() - 3, pointList.getSize()), gpsPoint);
             for (GpsPoint p : pp) {
                 pointList.add(p);
                 streamLof.update(p);

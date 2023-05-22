@@ -21,8 +21,8 @@ public class GpsPoint {
     //时间戳
     public long ingestionTime;
     public Point point;
-    public double lonCol;
-    public double latCol;
+    public int lonCol;
+    public int latCol;
     public boolean gridFlag = false;
 
     //构造方法
@@ -70,5 +70,6 @@ public class GpsPoint {
         return "编号:" + tid + ",时间戳:" + new Timestamp(ingestionTime) + ",经度:" + lng + ",纬度:" + lat;
         //new Timestamp(ingestionTime)
     }
+
 
 }

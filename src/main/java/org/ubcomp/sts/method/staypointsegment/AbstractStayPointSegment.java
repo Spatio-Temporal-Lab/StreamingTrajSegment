@@ -27,6 +27,7 @@ public abstract class AbstractStayPointSegment implements Serializable {
 
     protected void breakStayPoint(PointList pointList) {
         List<GpsPoint> list = pointList.getPointList().subList(0,pointList.stayPointEndLocalIndex);
+        //System.out.println(list);
         pointList.pointList = new ArrayList<>(pointList.getPointList()
             .subList(pointList.stayPointEndLocalIndex, pointList.getSize()));
         pointList.hasStayPoint = false;
@@ -42,7 +43,7 @@ public abstract class AbstractStayPointSegment implements Serializable {
             writer.newLine();
             writer.close();
         } catch (IOException e) {
-            System.out.println("写入文件时发生错误：" + e.getMessage());
+            //System.out.println("写入文件时发生错误：" + e.getMessage());
         }
     }
 
