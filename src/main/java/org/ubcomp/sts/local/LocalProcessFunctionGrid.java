@@ -1,4 +1,4 @@
-package org.ubcomp.sts.lcaol;
+package org.ubcomp.sts.local;
 
 import org.ubcomp.sts.index.Grid;
 import org.ubcomp.sts.method.staypointsegment.AbstractStayPointSegment;
