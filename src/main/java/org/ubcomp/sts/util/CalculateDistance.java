@@ -5,7 +5,7 @@ import org.ubcomp.sts.object.GpsPoint;
 public class CalculateDistance {
     public static double calculateDistance(GpsPoint p1, GpsPoint p2) {
 
-        /*double radLat1 = rad(p1.lat);
+        double radLat1 = rad(p1.lat);
         double radLon1 = rad(p1.lng);
         double radLat2 = rad(p2.lat);
         double radLon2 = rad(p2.lng);
@@ -13,11 +13,11 @@ public class CalculateDistance {
         double deltaLat = radLat2 - radLat1;
         double deltaLon = radLon2 - radLon1;
 
-        return Math.sqrt(Math.pow(deltaLat, 2) + Math.pow(deltaLon, 2)) * 6378.137 * 1000 + 1e-8;*/
+        return Math.sqrt(Math.pow(deltaLat, 2) + Math.pow(deltaLon, 2)) * 6378.137 * 1000 + 1e-8;
 
 
 
-        double lat1 = p1.lat;
+        /*double lat1 = p1.lat;
         double lat2 = p2.lat;
         double lng1 = p1.lng;
         double lng2 = p2.lng;
@@ -31,7 +31,7 @@ public class CalculateDistance {
         s = s * 6378.137;
         s = Math.round(s * 10000d) / 10000d;
         s = s * 1000;
-        return s+1e-8;
+        return s+1e-8;*/
 
     }
 

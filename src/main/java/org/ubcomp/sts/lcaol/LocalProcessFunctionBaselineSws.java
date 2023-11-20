@@ -22,17 +22,6 @@ public class LocalProcessFunctionBaselineSws extends AbstractLocalProcessFunctio
     public long process(PointList pointList, GpsPoint point) throws ParseException, IOException {
         long lateTime = 0;
         pointList.add(point);
-        /*double score = lof.update(point);
-        if (score > 10 && score < 10000) {
-            if (pointList.getSize() >= 4) {
-                GpsPoint p = Interpolator.interpolatePosition(pointList.pointList.subList(
-                        pointList.getSize() - 4, pointList.getSize() - 1), point.ingestionTime);
-                pointList.pointList.remove(pointList.getSize() - 1);
-                pointList.add(p);
-                lof.deletePoint();
-                lof.update(p);
-            }
-        }*/
         if (pointList.getSize() > W) {
             lateTime = (point.ingestionTime - pointList.pointList.get(pointList.getSize() - 4).ingestionTime);
             double error = processSws(pointList.getPointList().subList(pointList.getSize() - W, pointList.getSize()));
