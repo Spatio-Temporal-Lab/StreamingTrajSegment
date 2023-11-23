@@ -1,4 +1,4 @@
-package org.ubcomp.sts.lcaol;
+package org.ubcomp.sts.local;
 
 import org.ubcomp.sts.method.staypointsegment.AbstractStayPointSegment;
 import org.ubcomp.sts.method.staypointsegment.StayPointSegmentBase;

@@ -1,5 +1,6 @@
 package org.ubcomp.sts.method.staypointsegment;
 
+import org.ubcomp.sts.index.AreaEnum;
 import org.ubcomp.sts.index.Grid;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
@@ -20,8 +21,8 @@ public class StayPointSegmentWithGridOpt extends AbstractStayPointSegment {
         for (int i = pointList.getSize() - 2; i >= 0; i--) {
             double distance;
             GpsPoint nowPoint = pointList.getPointList().get(i);
-            int diffId = grid.getArea(nowPoint, latestGPSPoint);
-            if (diffId == 0) {
+            AreaEnum area = grid.getArea(nowPoint, latestGPSPoint);
+            if (area == AreaEnum.CHECK_AREA) {
                 distance = CalculateDistance.calculateDistance(latestGPSPoint, nowPoint);
                 if (distance > maxD) {
                     long timeInterval = latestGPSPoint.ingestionTime - pointList.getPointList().get(i + 1).ingestionTime;
@@ -30,7 +31,7 @@ public class StayPointSegmentWithGridOpt extends AbstractStayPointSegment {
                     }
                     break;
                 }
-            } else if (diffId >= 2) {
+            } else if (area == AreaEnum.PRUNED_AREA) {
                 long timeInterval = latestGPSPoint.ingestionTime - pointList.getPointList().get(i + 1).ingestionTime;
                 if (timeInterval > minT) {
                     exactStayPoint(pointList, i);
@@ -51,12 +52,12 @@ public class StayPointSegmentWithGridOpt extends AbstractStayPointSegment {
                 double distance;
 
                 GpsPoint nowPoint = pointList.getPointList().get(i);
-                int diffId = grid.getArea(nowPoint, latestGPSPoint);
-                if (diffId >= 2) {
+                AreaEnum area = grid.getArea(nowPoint, latestGPSPoint);
+                if (area == AreaEnum.PRUNED_AREA) {
                     breakStayPoint(pointList);
                     canMerge = false;
                     break;
-                } else if (diffId == 0) {
+                } else if (AreaEnum.CHECK_AREA == area) {
                     distance = CalculateDistance.calculateDistance(latestGPSPoint, nowPoint);
                     if (distance >= maxD) {
                         breakStayPoint(pointList);

@@ -1,4 +1,4 @@
-package org.ubcomp.sts.lcaol;
+package org.ubcomp.sts.local;
 
 import java.io.IOException;
 import java.text.ParseException;

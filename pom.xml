@@ -46,7 +46,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.ubcomp.sts.lcaol.LocalTest</mainClass>
+                            <mainClass>org.ubcomp.sts.local.LocalTest</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
