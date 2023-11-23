@@ -37,7 +37,7 @@ public class LocalTest {
 
             for (double maxD : list_D) {
                 Thread.sleep(2000);
-                LocalProcessFunction spds = new LocalProcessFunction(path, maxD, 300000);
+                LocalProcessFunctionBase spds = new LocalProcessFunctionBase(path, maxD, 300000);
                 t1 = System.nanoTime();
                 long t0 = spds.processElement();
                 t2 = System.nanoTime();
@@ -82,7 +82,7 @@ public class LocalTest {
             System.out.println("################################");
             //参数T
             for (long minT : list_T) {
-                LocalProcessFunction spds = new LocalProcessFunction(path, 50, minT);
+                LocalProcessFunctionBase spds = new LocalProcessFunctionBase(path, 50, minT);
                 t1 = System.nanoTime();
                 long t0 = spds.processElement();
                 t2 = System.nanoTime();

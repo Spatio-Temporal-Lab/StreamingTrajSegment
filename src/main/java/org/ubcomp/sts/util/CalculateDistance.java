@@ -13,11 +13,10 @@ public class CalculateDistance {
         double deltaLat = radLat2 - radLat1;
         double deltaLon = radLon2 - radLon1;
 
-        return Math.sqrt(Math.pow(deltaLat, 2) + Math.pow(deltaLon, 2)) * 6378.137 * 1000 + 1e-8;
+        return Math.sqrt(Math.pow(deltaLat, 2) + Math.pow(deltaLon, 2)) * 6378.137 * 1000 ;
 
 
-
-        /*double lat1 = p1.lat;
+     /*   double lat1 = p1.lat;
         double lat2 = p2.lat;
         double lng1 = p1.lng;
         double lng2 = p2.lng;
@@ -31,7 +30,7 @@ public class CalculateDistance {
         s = s * 6378.137;
         s = Math.round(s * 10000d) / 10000d;
         s = s * 1000;
-        return s+1e-8;*/
+        return s;*/
 
     }
 

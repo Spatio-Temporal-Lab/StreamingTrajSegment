@@ -10,8 +10,5 @@
         <module name="StreamingTrajSegment" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="StreamingTrajSegment" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>

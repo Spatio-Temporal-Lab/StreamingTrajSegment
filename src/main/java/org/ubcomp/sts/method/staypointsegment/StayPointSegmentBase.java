@@ -10,6 +10,22 @@ public class StayPointSegmentBase extends AbstractStayPointSegment {
         super(pointList, maxD, minT);
     }
 
+
+    @Override
+    public void processWithoutStayPoints() {
+        for (int i = pointList.getSize() - 2; i >= 0; i--) {
+            GpsPoint latestGPSPoint = pointList.getPointList().get(pointList.getSize() - 1);
+            double distance = CalculateDistance.calculateDistance(latestGPSPoint, pointList.getPointList().get(i));
+            if (distance > maxD) {
+                long timeInterval = latestGPSPoint.ingestionTime - pointList.getPointList().get(i + 1).ingestionTime;
+                if (timeInterval > minT) {
+                    exactStayPoint(pointList, i);
+                }
+                break;
+            }
+        }
+    }
+
     @Override
     public void processWithStayPoints() {
         int inIndex = FindGPSPointsWithInT.findIndex(pointList.pointList, minT);
@@ -32,18 +48,5 @@ public class StayPointSegmentBase extends AbstractStayPointSegment {
         }
     }
 
-    @Override
-    public void processWithoutStayPoints() {
-        for (int i = pointList.getSize() - 2; i >= 0; i--) {
-            GpsPoint latestGPSPoint = pointList.getPointList().get(pointList.getSize() - 1);
-            double distance = CalculateDistance.calculateDistance(latestGPSPoint, pointList.getPointList().get(i));
-            if (distance > maxD) {
-                long timeInterval = latestGPSPoint.ingestionTime - pointList.getPointList().get(i + 1).ingestionTime;
-                if (timeInterval > minT) {
-                    exactStayPoint(pointList, i);
-                }
-                break;
-            }
-        }
-    }
+
 }

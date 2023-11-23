@@ -29,19 +29,7 @@ public abstract class AbstractStayPointSegment implements Serializable {
             .subList(pointList.stayPointEndLocalIndex, pointList.getSize()));
         pointList.hasStayPoint = false;
         pointList.stayPointEndLocalIndex = -1;
-       /* String filePath = "output.txt";
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true));
-            for (GpsPoint gpsPoint : list) {
-                String line = gpsPoint.toString();
-                writer.write(line);
-                writer.write(",");
-            }
-            writer.newLine();
-            writer.close();
-        } catch (IOException e) {
-            //System.out.println("写入文件时发生错误：" + e.getMessage());
-        }*/
+
     }
 
     protected void mergeStayPoint(PointList pointList) {

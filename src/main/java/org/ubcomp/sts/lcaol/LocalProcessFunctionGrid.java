@@ -6,9 +6,6 @@ import org.ubcomp.sts.method.staypointsegment.StayPointSegmentWithGridOpt;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 
-import java.io.IOException;
-import java.text.ParseException;
-
 public class LocalProcessFunctionGrid extends AbstractLocalProcessFunction {
 
     private final double maxD;
@@ -20,17 +17,22 @@ public class LocalProcessFunctionGrid extends AbstractLocalProcessFunction {
         super(path);
         this.maxD = maxD;
         this.minT = minT;
-        grid = new Grid(maxD);
+        grid = new Grid(maxD,1);
     }
 
     @Override
-    public long process(PointList pointList, GpsPoint point) throws ParseException, IOException {
-        AbstractStayPointSegment stayPointSegment = new StayPointSegmentWithGridOpt(pointList,  maxD, minT, grid);
+    public long process(PointList pointList, GpsPoint point) {
+
+
         if (!pointList.hasStayPoint) {
+            grid.calGirdId(point);
             pointList.add(point);
+            AbstractStayPointSegment stayPointSegment = new StayPointSegmentWithGridOpt(pointList, maxD, minT, grid);
             stayPointSegment.processWithoutStayPoints();
         } else {
+            grid.calGirdId(point);
             pointList.add(point);
+            AbstractStayPointSegment stayPointSegment = new StayPointSegmentWithGridOpt(pointList, maxD, minT, grid);
             stayPointSegment.processWithStayPoints();
         }
         return 0;

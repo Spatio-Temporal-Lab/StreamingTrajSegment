@@ -8,23 +8,10 @@ import java.util.List;
 public class LocalTest2 {
     public static void main(String[] args) throws InterruptedException, IOException, ParseException {
 
-        long t1;
-        long t2;
         double run;
-        double run2;
-
-        //String path = "D:\\data\\cq_taxi\\batch-taxi-1000\\taxi-1000-";
-        //String path1 = "/home/yangyangsun/StreamingTrajSegment/data/cq_taxi/batch-taxi-1000/taxi-1000-";
-        //String path2 = "/home/yangyangsun/yangyangsun/StreamingTrajSegment/data/cq_taxi/batch-taxi-10000/taxi-1000-";
         String path3 = "D:\\project\\StreamingTrajSegment\\src\\main\\resources\\batch-taxi-1000\\taxi-1000-";
-        //String path4 = "/home/yangyangsun/yangyangsun/StreamingTrajSegment/data/cq_taxi/batch-taxi-50000/taxi-50000-";
-        //String path5 = "/home/yangyangsun/yangyangsun/StreamingTrajSegment/data/cq_taxi/batch-taxi-100000/taxi-100000-";
         List<String> pathList = new ArrayList<>();
-        //pathList.add(path1);
-        //pathList.add(path2);
         pathList.add(path3);
-        //pathList.add(path4);
-        //pathList.add(path5);
         List<Double> list_D = new ArrayList<>();
         List<Long> list_T = new ArrayList<>();
 
@@ -34,143 +21,23 @@ public class LocalTest2 {
             System.out.println("############################################");
             System.out.println("Now: " + path);
 
-            for (double maxD : list_D) {
-                ArrayList<Double> a = new ArrayList<Double>();
-                for (int i =0; i<=10; i++){
-                    Thread.sleep(2000);
-                    LocalProcessFunction spds = new LocalProcessFunction(path, maxD, 300000);
-                    t1 = System.nanoTime();
-                    long t0 = spds.processElement();
-                    t2 = System.nanoTime();
-                    run = (t0 / 1000000.0);
-                    run2 = (t0 / 1000000.0);
-                    //System.out.println("参数D=" + maxD + " spds-runtime: " + run / 1000 + " s");
-                    a.add(run / spds.countPoint);
-                    //System.out.println("参数D=" + maxD + " spds-avgLatency: " + run / spds.countPoint + " ms");
-                    //System.out.println(spds.countPoint +"  "+run2 + "  " + run +"    "+ t0);
-                    //System.out.println("参数D=" + maxD + " spds-throughput: " + spds.countPoint * 1000 / run2 + " records/s");
-                    //System.out.println();
-                    spds = null;
-                }
-                double sum = 0;
-                for (double t :a){
-                    sum += t;
-                }
-                System.out.println(sum/a.size());
-                a.clear();
+            for (double maxD : list_D){
 
-
-                for (int i =0; i<=10; i++){
-                    LocalProcessFunctionGrid spds_d_g = new LocalProcessFunctionGrid(path, maxD, 300000);
-                    t1 = System.nanoTime();
-                    long t0 = spds_d_g.processElement();
-                    t2 = System.nanoTime();
-                    run = (t0 / 1000000.0);
-                    run2 = (t0 / 1000000.0);
-                    a.add(run / spds_d_g.countPoint);
-                    //System.out.println("参数D=" + maxD + " spds_d_g-runtime: " + run / 1000 + " s");
-                    //System.out.println("参数D=" + maxD + " spds_d_g-avgLatency: " + run / spds_d_g.countPoint + " ms");
-                    //System.out.println("参数D=" + maxD + " spds_d_g-throughput: " + spds_d_g.countPoint * 1000 / run2 + " records/s");
-                    //System.out.println();
-                    spds_d_g = null;
-                    //Thread.sleep(2000);
-                }
-                sum = 0;
-                for (double t :a){
-                    sum += t;
-                }
-                System.out.println(sum/a.size());
-                a.clear();
-
-                /*Thread.sleep(2000);
-                LocalProcessFunctionGrid spds_d_g = new LocalProcessFunctionGrid(path, maxD, 300000);
-                t1 = System.nanoTime();
-                t0 = spds_d_g.processElement();
-                t2 = System.nanoTime();
-                run = (t0 / 1000000.0);
-                run2 = (t0 / 1000000.0);
-                //System.out.println("参数D=" + maxD + " spds_d_g-runtime: " + run / 1000 + " s");
-                System.out.println("参数D=" + maxD + " spds_d_g-avgLatency: " + run / spds_d_g.countPoint + " ms");
-                System.out.println("参数D=" + maxD + " spds_d_g-throughput: " + spds_d_g.countPoint * 1000 / run2 + " records/s");
-                System.out.println();
-                spds_d_g = null;
-                Thread.sleep(2000);*/
-
-                /*LocalProcessFunctionBaselineSws sws = new LocalProcessFunctionBaselineSws(path);
-                t1 = System.nanoTime();
-                t0 = sws.processElement();
-                t2 = System.nanoTime();
-                run = ((t2 - t1 + t0) / 1000000.0);
-                run2 = ((t2 - t1 ) / 1000000.0);
-                //System.out.println("参数D=" + maxD + "sws-runtime: " + run / 1000 + " s");
-                System.out.println("参数D=" + maxD + " sws-avgLatency: " + run / sws.countPoint + " ms");
-                System.out.println("参数D=" + maxD + " sws-throughput: " + sws.countPoint * 1000 / run2 + " records/s");
-                System.out.println();
-                sws = null;
-                Thread.sleep(2000);
-                System.out.println("################################");*/
-            }
-
-            /*System.out.println("################################");
-            //参数T
-            for (long minT : list_T) {
-                LocalProcessFunction spds = new LocalProcessFunction(path, 50, minT);
-                t1 = System.nanoTime();
+                LocalProcessFunctionBase spds = new LocalProcessFunctionBase(path, maxD, 15000);
                 long t0 = spds.processElement();
-                t2 = System.nanoTime();
-                run = ((t2 - t1 + t0) / 1000000.0);
-                run2 = ((t2 - t1 ) / 1000000.0);
-                //System.out.println("参数T=" + minT + " spds-runtime: " + run / 1000 + " s");
-                System.out.println("参数T=" + minT + " spds-avgLatency: " + run / spds.countPoint + " ms");
-                System.out.println("参数T=" + minT + " spds-throughput: " + spds.countPoint * 1000 / run2 + " records/s");
-                System.out.println();
-                spds = null;
-                Thread.sleep(2000);
+                run = (t0 / 1000000.0);
+                System.out.println(run / spds.countPoint);
 
-                *//*LocalProcessFunctionMergeDistance spds_d = new LocalProcessFunctionMergeDistance(path, 50, minT);
-                t1 = System.nanoTime();
-                t0 = spds_d.processElement();
-                t2 = System.nanoTime();
-                run = ((t2 - t1 + t0) / 1000000.0);
-                run2 = ((t2 - t1 ) / 1000000.0);
-                //System.out.println("参数T=" + minT + " spds_d-runtime: " + run / 1000 + " s");
-                System.out.println("参数T=" + minT + " spds_d-avgLatency: " + run / spds_d.countPoint + " ms");
-                System.out.println("参数T=" + minT + " spds_d-throughput: " + spds_d.countPoint * 1000 / run2 + " records/s");
-                System.out.println();
-                spds_d = null;
-                Thread.sleep(2000);*//*
+                System.out.println("############################################");
 
-                LocalProcessFunctionMergeDistanceGrid spds_d_g = new LocalProcessFunctionMergeDistanceGrid(path, 50, minT);
-                t1 = System.nanoTime();
+
+                LocalProcessFunctionGrid spds_d_g = new LocalProcessFunctionGrid(path, maxD, 15000);
                 t0 = spds_d_g.processElement();
-                t2 = System.nanoTime();
-                run = ((t2 - t1 + t0) / 1000000.0);
-                run2 = ((t2 - t1 ) / 1000000.0);
-                //System.out.println("参数T=" + minT + " spds_d_g-runtime: " + run / 1000 + " s");
-                System.out.println("参数T=" + minT + " spds_d_g-avgLatency: " + run / spds_d_g.countPoint + " ms");
-                System.out.println("参数T=" + minT + " spds_d_g-throughput: " + spds_d_g.countPoint * 1000 / run2 + " records/s");
-                System.out.println();
-                spds_d_g = null;
-                Thread.sleep(2000);
+                run = (t0 / 1000000.0);
+                System.out.println(run / spds_d_g.countPoint);
 
-                LocalProcessFunctionBaselineSws sws = new LocalProcessFunctionBaselineSws(path);
-                t1 = System.nanoTime();
-                t0 = sws.processElement();
-                t2 = System.nanoTime();
-                run = ((t2 - t1 + t0) / 1000000.0);
-                run2 = ((t2 - t1 ) / 1000000.0);
-                //System.out.println("参数T=" + minT + "sws-runtime: " + run / 1000 + " s");
-                System.out.println("参数T=" + minT + " sws-avgLatency: " + run / sws.countPoint + " ms");
-                System.out.println("参数T=" + minT + " sws-throughput: " + sws.countPoint * 1000 / run2 + " records/s");
-                System.out.println();
-                sws = null;
-                Thread.sleep(2000);
-                System.out.println("################################");
             }
-            System.out.println();
-            System.out.println();*/
         }
-        //参数D
     }
 
     public static void addD(List<Double> list_D) {
@@ -178,11 +45,7 @@ public class LocalTest2 {
         //list_D.add(20.0);
         //list_D.add(50.0);
         //list_D.add(75.0);
-        //list_D.add(100.0);
-        //list_D.add(100.0);
-        //list_D.add(100.0);
-       // list_D.add(100.0);
-        list_D.add(10.0);
+        list_D.add(50.0);
     }
 
     public static void addT(List<Long> list_T) {
