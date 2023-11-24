@@ -3,7 +3,6 @@ package org.ubcomp.sts.local;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 
