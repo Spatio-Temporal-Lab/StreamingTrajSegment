@@ -11,7 +11,7 @@ public class Grid implements Serializable {
     private final static double lat2 = 31.367676;
     private final double condition;
     //0~100
-    int[] squareArray = {
+    private final static int[] squareArray = {
             1, 0, 1, 4, 9, 16, 25, 36, 49, 64, 81,
             100, 121, 144, 169, 196, 225, 256, 289, 324, 361,
             400, 441, 484, 529, 576, 625, 676, 729, 784, 841,
@@ -57,12 +57,10 @@ public class Grid implements Serializable {
                 return AreaEnum.CHECK_AREA;
             }
         } else {
-            int addAll = diffLonMinusOne + diffLatMinusOne;
-            if (addAll >= condition) {
+            if (diffLonMinusOne * diffLonMinusOne + diffLatMinusOne * diffLatMinusOne >= condition) {
                 return AreaEnum.PRUNED_AREA;
             }
-            addAll = diffLonPlusOne + diffLatPlusOne;
-            if (addAll >= condition) {
+            if (diffLonPlusOne * diffLonPlusOne + diffLatPlusOne * diffLatPlusOne <= condition) {
                 return AreaEnum.CONFIRMED_AREA;
             }
             return AreaEnum.CHECK_AREA;

@@ -5,7 +5,7 @@ import org.ubcomp.sts.method.staypointsegment.StayPointSegment;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 
-public class LocalProcessFunction extends AbstractLocalProcessFunction{
+public class LocalProcessFunction extends AbstractLocalProcessFunction {
 
     private final double maxD;
     private final long minT;
@@ -17,16 +17,12 @@ public class LocalProcessFunction extends AbstractLocalProcessFunction{
     }
 
     @Override
-    public void process(PointList pointList, GpsPoint point){
-
-
+    public void process(PointList pointList, GpsPoint point) {
+        pointList.add(point);
+        AbstractStayPointSegment stayPointDetectSegment = new StayPointSegment(pointList, maxD, minT);
         if (!pointList.hasStayPoint) {
-            pointList.add(point);
-            AbstractStayPointSegment stayPointDetectSegment = new StayPointSegment(pointList, maxD, minT);
             stayPointDetectSegment.processWithoutStayPoints();
         } else {
-            pointList.add(point);
-            AbstractStayPointSegment stayPointDetectSegment = new StayPointSegment(pointList, maxD, minT);
             stayPointDetectSegment.processWithStayPoints();
         }
     }

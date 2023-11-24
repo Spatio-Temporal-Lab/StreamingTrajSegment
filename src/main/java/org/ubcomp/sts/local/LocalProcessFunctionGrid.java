@@ -12,7 +12,6 @@ public class LocalProcessFunctionGrid extends AbstractLocalProcessFunction {
     private final long minT;
     private final Grid grid;
 
-
     public LocalProcessFunctionGrid(String path, double maxD, long minT) {
         super(path);
         this.maxD = maxD;
@@ -22,8 +21,6 @@ public class LocalProcessFunctionGrid extends AbstractLocalProcessFunction {
 
     @Override
     public void process(PointList pointList, GpsPoint point) {
-
-
         if (!pointList.hasStayPoint) {
             grid.calGirdId(point);
             pointList.add(point);

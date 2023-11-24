@@ -7,7 +7,6 @@ import org.ubcomp.sts.object.PointList;
 import org.ubcomp.sts.util.CalculateDistance;
 import org.ubcomp.sts.util.FindGPSPointsWithInT;
 
-
 public class StayPointSegmentWithGridOpt extends AbstractStayPointSegment {
     private final Grid grid;
     public StayPointSegmentWithGridOpt(PointList pointList, double maxD, long minT, Grid grid1) {

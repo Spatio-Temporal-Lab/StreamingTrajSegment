@@ -43,7 +43,6 @@ public abstract class AbstractLocalProcessFunction {
                 long s2 = System.nanoTime();
 
                 countPoint++;
-                //arrayListMap.put(gpsPoint.tid, pointList);
 
                 totalDelay += s2 - s1;
             }
