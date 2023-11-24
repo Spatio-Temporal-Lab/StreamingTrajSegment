@@ -27,14 +27,14 @@ public abstract class AbstractLocalProcessFunction {
         for (int i = 1; i <= 500; i++) {
             BufferedReader reader = new BufferedReader(new FileReader(filePath + i + ".txt"));
             int a = 1;
-            String line = null;
-            //while ((line = reader.readLine()) != null) {
-            while (a == 1) {//(line = reader.readLine()) != null
+            String line;
+            while ((line = reader.readLine()) != null) {
+           /* while (a == 1) {//(line = reader.readLine()) != null
                 a += 1;
                 while (a != 6) {
                     line = reader.readLine();
                     a += 1;
-                }
+                }*/
                 GpsPoint gpsPoint = mapFunction(line);
                 PointList pointList = arrayListMap.computeIfAbsent(gpsPoint.tid, k -> new PointList());
 
@@ -51,7 +51,7 @@ public abstract class AbstractLocalProcessFunction {
         return totalDelay;
     }
 
-    public abstract long process(PointList pointList, GpsPoint point) throws ParseException, IOException;
+    public abstract void process(PointList pointList, GpsPoint point) throws ParseException, IOException;
 
     private GpsPoint mapFunction(String line) throws ParseException {
         String[] result = line.replace("'", "")

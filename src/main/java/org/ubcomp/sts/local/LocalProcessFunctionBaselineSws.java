@@ -19,16 +19,13 @@ public class LocalProcessFunctionBaselineSws extends AbstractLocalProcessFunctio
     }
 
     @Override
-    public long process(PointList pointList, GpsPoint point) throws ParseException, IOException {
-        long lateTime = 0;
+    public void process(PointList pointList, GpsPoint point) throws ParseException {
         pointList.add(point);
         if (pointList.getSize() > W) {
-            lateTime = (point.ingestionTime - pointList.pointList.get(pointList.getSize() - 4).ingestionTime);
             double error = processSws(pointList.getPointList().subList(pointList.getSize() - W, pointList.getSize()));
             if (error > ERROR) {
                 pointList.pointList = new ArrayList<>();
             }
         }
-        return lateTime;
     }
 }

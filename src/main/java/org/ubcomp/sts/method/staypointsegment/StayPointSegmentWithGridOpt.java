@@ -23,7 +23,7 @@ public class StayPointSegmentWithGridOpt extends AbstractStayPointSegment {
             GpsPoint nowPoint = pointList.getPointList().get(i);
             AreaEnum area = grid.getArea(nowPoint, latestGPSPoint);
             if (area == AreaEnum.CHECK_AREA) {
-                distance = CalculateDistance.calculateDistance(latestGPSPoint, nowPoint);
+                distance = CalculateDistance.calDis(latestGPSPoint, nowPoint);
                 if (distance > maxD) {
                     long timeInterval = latestGPSPoint.ingestionTime - pointList.getPointList().get(i + 1).ingestionTime;
                     if (timeInterval > minT) {
@@ -58,7 +58,7 @@ public class StayPointSegmentWithGridOpt extends AbstractStayPointSegment {
                     canMerge = false;
                     break;
                 } else if (AreaEnum.CHECK_AREA == area) {
-                    distance = CalculateDistance.calculateDistance(latestGPSPoint, nowPoint);
+                    distance = CalculateDistance.calDis(latestGPSPoint, nowPoint);
                     if (distance >= maxD) {
                         breakStayPoint(pointList);
                         canMerge = false;

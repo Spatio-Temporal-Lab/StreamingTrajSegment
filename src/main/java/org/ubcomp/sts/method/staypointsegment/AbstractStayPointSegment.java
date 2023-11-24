@@ -1,11 +1,9 @@
 package org.ubcomp.sts.method.staypointsegment;
 
-import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 public abstract class AbstractStayPointSegment implements Serializable {
     protected PointList pointList;
@@ -23,7 +21,7 @@ public abstract class AbstractStayPointSegment implements Serializable {
     public abstract void processWithoutStayPoints();
 
     protected void breakStayPoint(PointList pointList) {
-        List<GpsPoint> list = pointList.getPointList().subList(0,pointList.stayPointEndLocalIndex);
+        //List<GpsPoint> list = pointList.getPointList().subList(0,pointList.stayPointEndLocalIndex);
         //System.out.println(list);
         pointList.pointList = new ArrayList<>(pointList.getPointList()
             .subList(pointList.stayPointEndLocalIndex, pointList.getSize()));

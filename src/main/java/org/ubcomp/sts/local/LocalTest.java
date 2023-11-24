@@ -37,7 +37,7 @@ public class LocalTest {
 
             for (double maxD : list_D) {
                 Thread.sleep(2000);
-                LocalProcessFunctionBase spds = new LocalProcessFunctionBase(path, maxD, 300000);
+                LocalProcessFunction spds = new LocalProcessFunction(path, maxD, 300000);
                 t1 = System.nanoTime();
                 long t0 = spds.processElement();
                 t2 = System.nanoTime();
@@ -48,7 +48,6 @@ public class LocalTest {
                 //System.out.println(spds.countPoint +"  "+run2 + "  " + run +"    "+ t0);
                 System.out.println("参数D=" + maxD + " spds-throughput: " + spds.countPoint * 1000 / run2 + " records/s");
                 System.out.println();
-                spds = null;
                 Thread.sleep(2000);
 
                 LocalProcessFunctionGrid spds_d_g = new LocalProcessFunctionGrid(path, maxD, 300000);
@@ -61,7 +60,6 @@ public class LocalTest {
                 System.out.println("参数D=" + maxD + " spds_d_g-avgLatency: " + run / spds_d_g.countPoint + " ms");
                 System.out.println("参数D=" + maxD + " spds_d_g-throughput: " + spds_d_g.countPoint * 1000 / run2 + " records/s");
                 System.out.println();
-                spds_d_g = null;
                 Thread.sleep(2000);
 
                 LocalProcessFunctionBaselineSws sws = new LocalProcessFunctionBaselineSws(path);
@@ -70,11 +68,9 @@ public class LocalTest {
                 t2 = System.nanoTime();
                 run = ((t2 - t1 + t0) / 1000000.0);
                 run2 = ((t2 - t1 ) / 1000000.0);
-                //System.out.println("参数D=" + maxD + "sws-runtime: " + run / 1000 + " s");
                 System.out.println("参数D=" + maxD + " sws-avgLatency: " + run / sws.countPoint + " ms");
                 System.out.println("参数D=" + maxD + " sws-throughput: " + sws.countPoint * 1000 / run2 + " records/s");
                 System.out.println();
-                sws = null;
                 Thread.sleep(2000);
                 System.out.println("################################");
             }
@@ -82,31 +78,17 @@ public class LocalTest {
             System.out.println("################################");
             //参数T
             for (long minT : list_T) {
-                LocalProcessFunctionBase spds = new LocalProcessFunctionBase(path, 50, minT);
+                LocalProcessFunction spds = new LocalProcessFunction(path, 50, minT);
                 t1 = System.nanoTime();
                 long t0 = spds.processElement();
                 t2 = System.nanoTime();
                 run = ((t2 - t1 + t0) / 1000000.0);
                 run2 = ((t2 - t1 ) / 1000000.0);
-                //System.out.println("参数T=" + minT + " spds-runtime: " + run / 1000 + " s");
                 System.out.println("参数T=" + minT + " spds-avgLatency: " + run / spds.countPoint + " ms");
                 System.out.println("参数T=" + minT + " spds-throughput: " + spds.countPoint * 1000 / run2 + " records/s");
                 System.out.println();
-                spds = null;
                 Thread.sleep(2000);
 
-                /*LocalProcessFunctionMergeDistance spds_d = new LocalProcessFunctionMergeDistance(path, 50, minT);
-                t1 = System.nanoTime();
-                t0 = spds_d.processElement();
-                t2 = System.nanoTime();
-                run = ((t2 - t1 + t0) / 1000000.0);
-                run2 = ((t2 - t1 ) / 1000000.0);
-                //System.out.println("参数T=" + minT + " spds_d-runtime: " + run / 1000 + " s");
-                System.out.println("参数T=" + minT + " spds_d-avgLatency: " + run / spds_d.countPoint + " ms");
-                System.out.println("参数T=" + minT + " spds_d-throughput: " + spds_d.countPoint * 1000 / run2 + " records/s");
-                System.out.println();
-                spds_d = null;
-                Thread.sleep(2000);*/
 
                 LocalProcessFunctionGrid spds_d_g = new LocalProcessFunctionGrid(path, 50, minT);
                 t1 = System.nanoTime();
@@ -114,11 +96,9 @@ public class LocalTest {
                 t2 = System.nanoTime();
                 run = ((t2 - t1 + t0) / 1000000.0);
                 run2 = ((t2 - t1 ) / 1000000.0);
-                //System.out.println("参数T=" + minT + " spds_d_g-runtime: " + run / 1000 + " s");
                 System.out.println("参数T=" + minT + " spds_d_g-avgLatency: " + run / spds_d_g.countPoint + " ms");
                 System.out.println("参数T=" + minT + " spds_d_g-throughput: " + spds_d_g.countPoint * 1000 / run2 + " records/s");
                 System.out.println();
-                spds_d_g = null;
                 Thread.sleep(2000);
 
                 LocalProcessFunctionBaselineSws sws = new LocalProcessFunctionBaselineSws(path);
@@ -127,18 +107,15 @@ public class LocalTest {
                 t2 = System.nanoTime();
                 run = ((t2 - t1 + t0) / 1000000.0);
                 run2 = ((t2 - t1 ) / 1000000.0);
-                //System.out.println("参数T=" + minT + "sws-runtime: " + run / 1000 + " s");
                 System.out.println("参数T=" + minT + " sws-avgLatency: " + run / sws.countPoint + " ms");
                 System.out.println("参数T=" + minT + " sws-throughput: " + sws.countPoint * 1000 / run2 + " records/s");
                 System.out.println();
-                sws = null;
                 Thread.sleep(2000);
                 System.out.println("################################");
             }
             System.out.println();
             System.out.println();
         }
-        //参数D
     }
 
     public static void addD(List<Double> list_D) {

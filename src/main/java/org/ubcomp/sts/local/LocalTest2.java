@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LocalTest2 {
-    public static void main(String[] args) throws InterruptedException, IOException, ParseException {
+    public static void main(String[] args) throws IOException, ParseException {
 
         double run;
-        String path3 = "D:\\project\\StreamingTrajSegment\\src\\main\\resources\\batch-taxi-1000\\taxi-1000-";
+        String path3 = "src/main/resources/batch-taxi-1000/taxi-1000-";
         List<String> pathList = new ArrayList<>();
         pathList.add(path3);
         List<Double> list_D = new ArrayList<>();
@@ -17,24 +17,23 @@ public class LocalTest2 {
 
         addD(list_D);
         addT(list_T);
-        for (String path : pathList){
+        for (String path : pathList) {
             System.out.println("############################################");
             System.out.println("Now: " + path);
 
-            for (double maxD : list_D){
+            for (double maxD : list_D) {
 
-                LocalProcessFunctionBase spds = new LocalProcessFunctionBase(path, maxD, 15000);
-                long t0 = spds.processElement();
+                LocalProcessFunctionGrid spds_d_g = new LocalProcessFunctionGrid(path, maxD, 15000);
+                long t0 = spds_d_g.processElement();
                 run = (t0 / 1000000.0);
-                System.out.println(run / spds.countPoint);
+                System.out.println(run / spds_d_g.countPoint);
 
                 System.out.println("############################################");
 
-
-                LocalProcessFunctionGrid spds_d_g = new LocalProcessFunctionGrid(path, maxD, 15000);
-                t0 = spds_d_g.processElement();
+                LocalProcessFunction spds = new LocalProcessFunction(path, maxD, 15000);
+                t0 = spds.processElement();
                 run = (t0 / 1000000.0);
-                System.out.println(run / spds_d_g.countPoint);
+                System.out.println(run / spds.countPoint);
 
             }
         }
@@ -49,7 +48,7 @@ public class LocalTest2 {
     }
 
     public static void addT(List<Long> list_T) {
-        //list_T.add(60000L);//1min
+        list_T.add(60000L);//1min
         //list_T.add(180000L);//3min
         //list_T.add(300000L);//5min
         //list_T.add(600000L);//10min

@@ -21,7 +21,7 @@ public class LocalProcessFunctionGrid extends AbstractLocalProcessFunction {
     }
 
     @Override
-    public long process(PointList pointList, GpsPoint point) {
+    public void process(PointList pointList, GpsPoint point) {
 
 
         if (!pointList.hasStayPoint) {
@@ -35,6 +35,5 @@ public class LocalProcessFunctionGrid extends AbstractLocalProcessFunction {
             AbstractStayPointSegment stayPointSegment = new StayPointSegmentWithGridOpt(pointList, maxD, minT, grid);
             stayPointSegment.processWithStayPoints();
         }
-        return 0;
     }
 }
