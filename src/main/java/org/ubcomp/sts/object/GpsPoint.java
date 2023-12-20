@@ -63,6 +63,16 @@ public class GpsPoint {
         //this.LONCOL = aa.get(1);
     }
 
+    public GpsPoint(double lng, double lat, String tid, long ingestionTime, long a, Boolean isStayPoint) throws ParseException {
+        this.ingestionTime = ingestionTime + a;
+        this.tid = tid;
+        this.lng = lng;
+        this.lat = lat;
+        this.isStayPoint = isStayPoint;
+
+    }
+
+
     @Override
     public String toString() {
         return "编号:" + tid + ",时间戳:" + new Timestamp(ingestionTime) + ",经度:" + lng + ",纬度:" + lat;

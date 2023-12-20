@@ -9,7 +9,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LocalTest {
+public class LatencyAndThroughputTest {
     public static void main(String[] args) throws IOException, ParseException, FactoryException, TransformException {
 
         //set the number of experiment
@@ -43,7 +43,7 @@ public class LocalTest {
         // start experiments
         for (String path : pathList) {
             System.out.println("############################################");
-            System.out.println("Now: " + path);
+            System.out.println("Now dataset: " + path);
             System.out.println("##################### parameter d #####################");
             //parameter D
             for (double maxD : list_D) {

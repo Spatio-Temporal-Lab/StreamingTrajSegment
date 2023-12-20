@@ -57,7 +57,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>LocalTest</mainClass>
+                            <mainClass>LatencyAndThroughputTest</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
