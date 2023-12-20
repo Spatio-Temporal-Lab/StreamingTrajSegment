@@ -3,9 +3,7 @@ package org.ubcomp.sts.executor;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 import org.ubcomp.sts.index.Grid;
-import org.ubcomp.sts.method.staypointsegment.AbstractStayPointSegment;
 import org.ubcomp.sts.method.staypointsegment.AbstractStayPointSegmentForF1Score;
-import org.ubcomp.sts.method.staypointsegment.StayPointSegmentWithGridOpt;
 import org.ubcomp.sts.method.staypointsegment.StayPointSegmentWithGridOptForF1Score;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
@@ -16,8 +14,7 @@ public class LocalProcessFunctionGridForF1Score extends AbstractLocalProcessFunc
     private final long minT;
     private final Grid grid;
 
-
-    public LocalProcessFunctionGridForF1Score(String pathIn, String pathOut, String dir , double maxD, long minT, int gridSize) {
+    public LocalProcessFunctionGridForF1Score(String pathIn, String pathOut, String dir, double maxD, long minT, int gridSize) {
         super(pathIn, pathOut, dir);
         this.maxD = maxD;
         this.minT = minT;
@@ -26,9 +23,9 @@ public class LocalProcessFunctionGridForF1Score extends AbstractLocalProcessFunc
 
     @Override
     public void process(PointList pointList, GpsPoint point, PointList result) throws FactoryException, TransformException {
-            grid.calGirdId(point);
-            pointList.add(point);
-            AbstractStayPointSegmentForF1Score stayPointSegment = new StayPointSegmentWithGridOptForF1Score(pointList, maxD, minT, grid, result);
-            stayPointSegment.stayPointDetection();
+        grid.calGirdId(point);
+        pointList.add(point);
+        AbstractStayPointSegmentForF1Score stayPointSegment = new StayPointSegmentWithGridOptForF1Score(pointList, maxD, minT, grid, result);
+        stayPointSegment.stayPointDetection();
     }
 }

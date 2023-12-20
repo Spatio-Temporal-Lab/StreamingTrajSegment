@@ -14,7 +14,6 @@ public class LocalProcessFunctionGrid extends AbstractLocalProcessFunction {
     private final long minT;
     private final Grid grid;
 
-
     public LocalProcessFunctionGrid(String path, double maxD, long minT, int gridSize) {
         super(path);
         this.maxD = maxD;

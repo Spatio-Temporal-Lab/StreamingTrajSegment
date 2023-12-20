@@ -1,6 +1,6 @@
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
-import org.ubcomp.sts.executor.LocalProcessFunctionBase;
+import org.ubcomp.sts.executor.LocalProcessFunctionSPD;
 import org.ubcomp.sts.executor.LocalProcessFunctionBaselineSws;
 import org.ubcomp.sts.executor.LocalProcessFunctionGrid;
 
@@ -49,7 +49,7 @@ public class LatencyAndThroughputTest {
             for (double maxD : list_D) {
                 //start SPD method
                 for (int i = 1; i <= expNum; i++) {
-                    LocalProcessFunctionBase STEP = new LocalProcessFunctionBase(path, maxD, defaultT);
+                    LocalProcessFunctionSPD STEP = new LocalProcessFunctionSPD(path, maxD, defaultT);
                     delay = STEP.processElement();
                     latency = (delay[0]);
                     processTime = (delay[1]);
@@ -81,7 +81,7 @@ public class LatencyAndThroughputTest {
             for (long minT : list_T) {
                 //start SPD method
                 for (int i = 1; i <= expNum; i++) {
-                    LocalProcessFunctionBase STEP = new LocalProcessFunctionBase(path, defaultD, minT);
+                    LocalProcessFunctionSPD STEP = new LocalProcessFunctionSPD(path, defaultD, minT);
                     delay = STEP.processElement();
                     latency = (delay[0]);
                     processTime = (delay[1]);

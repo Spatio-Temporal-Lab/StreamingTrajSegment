@@ -7,13 +7,12 @@ import org.ubcomp.sts.method.staypointsegment.StayPointSegment;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 
-public class LocalProcessFunctionBase extends AbstractLocalProcessFunction {
+public class LocalProcessFunctionSPD extends AbstractLocalProcessFunction {
 
     private final double maxD;
     private final long minT;
 
-
-    public LocalProcessFunctionBase(String path, double maxD, long minT) {
+    public LocalProcessFunctionSPD(String path, double maxD, long minT) {
         super(path);
         this.maxD = maxD;
         this.minT = minT;

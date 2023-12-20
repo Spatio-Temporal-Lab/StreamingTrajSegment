@@ -1,5 +1,6 @@
 package org.ubcomp.sts.calf1score;
 
+import org.ubcomp.sts.executor.AbstractLocalProcessFunctionForF1Score;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 import org.ubcomp.sts.util.CalculateDistance;
@@ -98,14 +99,7 @@ public class SPDOffline {
                     if (!file.exists()) {
                         file.createNewFile();
                     }
-                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
-                        // 追加内容到文件
-                        GpsPoint point = list.getPointList().get(i - 1);
-                        writer.write(point.lng + "," + point.lat + "," + point.tid + "," + point.ingestionTime + "," + point.isStayPoint);
-                        writer.newLine();
-                    } catch (IOException e) {
-                        System.err.println("Error writing to the file: " + e.getMessage());
-                    }
+                    AbstractLocalProcessFunctionForF1Score.write(list, i, filePath);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

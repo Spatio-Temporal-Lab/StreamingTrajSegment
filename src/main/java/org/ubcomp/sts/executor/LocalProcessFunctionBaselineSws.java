@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import static org.ubcomp.sts.method.sws.Sws.processSws;
 
-public class LocalProcessFunctionBaselineSws extends AbstractLocalProcessFunction{
+public class LocalProcessFunctionBaselineSws extends AbstractLocalProcessFunction {
 
     private static final int W = 7;
     private static final int ERROR = 5000;
