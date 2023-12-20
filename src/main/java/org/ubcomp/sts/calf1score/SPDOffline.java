@@ -1,13 +1,15 @@
 package org.ubcomp.sts.calf1score;
 
-import org.ubcomp.sts.executor.AbstractLocalProcessFunctionForF1Score;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 import org.ubcomp.sts.util.CalculateDistance;
 import org.ubcomp.sts.util.MapToGPSPoint;
 import org.ubcomp.sts.util.WriteToFile;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
 
