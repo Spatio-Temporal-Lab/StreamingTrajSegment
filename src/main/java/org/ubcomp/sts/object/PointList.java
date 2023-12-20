@@ -9,7 +9,6 @@ public class PointList {
 
     //temporary gps point list
     public ArrayList<GpsPoint> pointList = new ArrayList<>();
-    ;
     //indicates the presence or absence of  stay point
     public boolean hasStayPoint = false;
     //the location of stay point(total), inclusive

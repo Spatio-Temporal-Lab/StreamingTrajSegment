@@ -22,7 +22,6 @@ public class MapToGPSPoint {
                 time,
                 0);
     }
-
     public static GpsPoint mapFunctionAcc(String line) throws ParseException {
         String[] result = line.split(",");
         String lng = result[0];
@@ -37,20 +36,5 @@ public class MapToGPSPoint {
                 time,
                 0,
                 isStayPoint);
-    }
-
-    public static GpsPoint mapFunction2(String line) throws ParseException {
-        String[] result = line.split(",");
-        String t1 = result[2];
-        String t2 = result[3];
-        String lng = result[1];
-        String lat = result[0];
-        String tid = result[4];
-        String time = t1 + " " + t2;
-        return new GpsPoint(Double.parseDouble(lng),
-                Double.parseDouble(lat),
-                tid,
-                time,
-                0);
     }
 }

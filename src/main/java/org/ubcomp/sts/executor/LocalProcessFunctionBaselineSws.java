@@ -1,7 +1,5 @@
 package org.ubcomp.sts.executor;
 
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.operation.TransformException;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 
@@ -20,7 +18,7 @@ public class LocalProcessFunctionBaselineSws extends AbstractLocalProcessFunctio
     }
 
     @Override
-    public void process(PointList pointList, GpsPoint point) throws ParseException, FactoryException, TransformException {
+    public void process(PointList pointList, GpsPoint point) throws ParseException {
         pointList.add(point);
         if (pointList.getSize() > W) {
             double error = processSws(pointList.getPointList().subList(pointList.getSize() - W, pointList.getSize()));
