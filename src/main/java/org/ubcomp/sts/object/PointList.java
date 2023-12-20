@@ -5,10 +5,11 @@ import java.util.ArrayList;
 /**
  * @author syy
  **/
-public class PointList{
+public class PointList {
 
     //temporary gps point list
-    public ArrayList<GpsPoint> pointList = new ArrayList<>();;
+    public ArrayList<GpsPoint> pointList = new ArrayList<>();
+    ;
     //indicates the presence or absence of  stay point
     public boolean hasStayPoint = false;
     //the location of stay point(total), inclusive
@@ -16,7 +17,8 @@ public class PointList{
     public int stayPointEndGlobalIndex = -1;
     public int stayPointEndLocalIndex = -1;
 
-    public PointList() { }
+    public PointList() {
+    }
 
     public void add(GpsPoint p) {
         pointList.add(p);

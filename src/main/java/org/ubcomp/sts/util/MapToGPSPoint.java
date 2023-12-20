@@ -38,6 +38,7 @@ public class MapToGPSPoint {
                 0,
                 isStayPoint);
     }
+
     public static GpsPoint mapFunction2(String line) throws ParseException {
         String[] result = line.split(",");
         String t1 = result[2];

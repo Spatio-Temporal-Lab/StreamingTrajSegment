@@ -1,8 +1,6 @@
 package org.ubcomp.sts.method.sws;
 
 import org.apache.commons.math3.stat.regression.SimpleRegression;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.operation.TransformException;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.util.CalculateDistance;
 
@@ -14,7 +12,7 @@ import java.util.List;
  * @author syy
  */
 public class Sws implements Serializable {
-    public static double processSws(List<GpsPoint> pointList) throws ParseException, FactoryException, TransformException {
+    public static double processSws(List<GpsPoint> pointList) throws ParseException {
 
         int mid = pointList.size() / 2 + 1;
         List<GpsPoint> pointList1 = pointList.subList(0, mid);
