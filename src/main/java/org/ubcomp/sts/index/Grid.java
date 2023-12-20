@@ -57,13 +57,13 @@ public class Grid implements Serializable {
                 return AreaEnum.CHECK_AREA;
             }
         } else {*/
-            if (diffLonMinusOne * diffLonMinusOne + diffLatMinusOne * diffLatMinusOne >= condition) {
-                return AreaEnum.PRUNED_AREA;
-            }
-            if (diffLonPlusOne * diffLonPlusOne + diffLatPlusOne * diffLatPlusOne <= condition) {
-                return AreaEnum.CONFIRMED_AREA;
-            }
-            return AreaEnum.CHECK_AREA;
-       // }
+        if (diffLonMinusOne * diffLonMinusOne + diffLatMinusOne * diffLatMinusOne >= condition) {
+            return AreaEnum.PRUNED_AREA;
+        }
+        if (diffLonPlusOne * diffLonPlusOne + diffLatPlusOne * diffLatPlusOne <= condition) {
+            return AreaEnum.CONFIRMED_AREA;
+        }
+        return AreaEnum.CHECK_AREA;
+        // }
     }
 }

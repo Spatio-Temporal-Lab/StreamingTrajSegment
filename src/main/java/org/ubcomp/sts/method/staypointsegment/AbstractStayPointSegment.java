@@ -26,10 +26,8 @@ public abstract class AbstractStayPointSegment implements Serializable {
     public abstract void stayPointDetection() throws FactoryException, TransformException;
 
     protected void breakStayPoint(PointList pointList) {
-        //List<GpsPoint> list = pointList.getPointList().subList(0,pointList.stayPointEndLocalIndex);
-        //System.out.println(list);
         pointList.pointList = new ArrayList<>(pointList.getPointList()
-            .subList(pointList.stayPointEndLocalIndex, pointList.getSize()));
+                .subList(pointList.stayPointEndLocalIndex, pointList.getSize()));
         pointList.hasStayPoint = false;
         pointList.stayPointEndLocalIndex = -1;
 
@@ -45,7 +43,7 @@ public abstract class AbstractStayPointSegment implements Serializable {
         pointList.stayPointStartGlobalIndex += currentIndex + 2;
         pointList.hasStayPoint = true;
         pointList.pointList = new ArrayList<>(
-            pointList.getPointList().subList(currentIndex + 1, pointList.getSize()));
+                pointList.getPointList().subList(currentIndex + 1, pointList.getSize()));
         pointList.stayPointEndGlobalIndex = pointList.stayPointStartGlobalIndex + pointList.getSize() - 1;
         pointList.stayPointEndLocalIndex = pointList.getSize();
     }

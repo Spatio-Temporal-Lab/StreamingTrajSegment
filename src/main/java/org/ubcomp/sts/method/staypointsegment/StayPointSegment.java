@@ -1,7 +1,5 @@
 package org.ubcomp.sts.method.staypointsegment;
 
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.operation.TransformException;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 import org.ubcomp.sts.util.CalculateDistance;
@@ -12,7 +10,7 @@ public class StayPointSegment extends AbstractStayPointSegment {
     }
 
 
-    public void stayPointDetection() throws FactoryException, TransformException {
+    public void stayPointDetection() {
         GpsPoint latestGPSPoint = pointList.getPointList().get(pointList.getSize() - 1);
         for (int i = pointList.getSize() - 2; i >= 0; i--) {
             double distance;
@@ -21,14 +19,14 @@ public class StayPointSegment extends AbstractStayPointSegment {
             if (distance > maxD) {
                 long timeInterval = latestGPSPoint.ingestionTime - pointList.getPointList().get(i + 1).ingestionTime;
                 if (timeInterval > minT) {
-                    //找到了驻留点
+                    //find stay point
                     if (pointList.hasStayPoint) {
                         processWithStayPoints(true, i);
                     } else {
                         processWithoutStayPoints(true, i);
                     }
                 } else {
-                    //没找到驻留点
+                    //can't find stay point
                     if (pointList.hasStayPoint) {
                         processWithStayPoints(false, i);
                     } else {
@@ -53,7 +51,7 @@ public class StayPointSegment extends AbstractStayPointSegment {
 
 
     @Override
-    public void processWithStayPoints(boolean findOrNot, int index) throws FactoryException, TransformException {
+    public void processWithStayPoints(boolean findOrNot, int index) {
         if (findOrNot) {
             if (index <= pointList.stayPointEndLocalIndex) {
                 //Case 1.2 Two Stay Points Intersected
