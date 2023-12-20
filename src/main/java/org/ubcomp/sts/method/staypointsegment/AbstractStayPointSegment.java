@@ -1,5 +1,7 @@
 package org.ubcomp.sts.method.staypointsegment;
 
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.operation.TransformException;
 import org.ubcomp.sts.object.PointList;
 
 import java.io.Serializable;
@@ -16,9 +18,12 @@ public abstract class AbstractStayPointSegment implements Serializable {
         this.minT = minT;
     }
 
-    public abstract void processWithStayPoints();
+    public abstract void processWithStayPoints(boolean findOrNot, int index) throws FactoryException, TransformException;
 
-    public abstract void processWithoutStayPoints();
+    public abstract void processWithoutStayPoints(boolean findOrNot, int index);
+
+
+    public abstract void stayPointDetection() throws FactoryException, TransformException;
 
     protected void breakStayPoint(PointList pointList) {
         //List<GpsPoint> list = pointList.getPointList().subList(0,pointList.stayPointEndLocalIndex);

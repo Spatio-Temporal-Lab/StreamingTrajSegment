@@ -1,5 +1,7 @@
 package org.ubcomp.sts.local;
 
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.operation.TransformException;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 
@@ -20,22 +22,16 @@ public abstract class AbstractLocalProcessFunction {
         this.filePath = path;
     }
 
-    public long processElement() throws IOException, ParseException {
+    public double[] processElement() throws IOException, ParseException, FactoryException, TransformException {
 
-        long totalDelay = 0;
+        double delay = 0;
+        double totalDelay = 0;
 
         for (int i = 1; i <= 500; i++) {
             BufferedReader reader = new BufferedReader(new FileReader(filePath + i + ".txt"));
-            int a = 1;
             String line;
             while ((line = reader.readLine()) != null) {
-           /* while (a == 1) {//(line = reader.readLine()) != null
-                a += 1;
-                while (a != 6) {
-                    line = reader.readLine();
-                    a += 1;
-                }*/
-                GpsPoint gpsPoint = mapFunction(line);
+                GpsPoint gpsPoint = mapFunction2(line);
                 PointList pointList = arrayListMap.computeIfAbsent(gpsPoint.tid, k -> new PointList());
 
                 long s1 = System.nanoTime();
@@ -43,14 +39,15 @@ public abstract class AbstractLocalProcessFunction {
                 long s2 = System.nanoTime();
 
                 countPoint++;
-
-                totalDelay += s2 - s1;
+                double timeDiff = (s2 -s1) / 1000000.0;
+                delay += timeDiff;
+                totalDelay = totalDelay + delay;
             }
         }
-        return totalDelay;
+        return new double[]{totalDelay, delay};
     }
 
-    public abstract void process(PointList pointList, GpsPoint point) throws ParseException, IOException;
+    public abstract void process(PointList pointList, GpsPoint point) throws ParseException, IOException, FactoryException, TransformException;
 
     private GpsPoint mapFunction(String line) throws ParseException {
         String[] result = line.replace("'", "")

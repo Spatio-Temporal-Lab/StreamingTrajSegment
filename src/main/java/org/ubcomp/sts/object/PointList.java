@@ -1,12 +1,11 @@
 package org.ubcomp.sts.object;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * @author syy
  **/
-public class PointList implements Serializable {
+public class PointList{
 
     //temporary gps point list
     public ArrayList<GpsPoint> pointList = new ArrayList<>();;

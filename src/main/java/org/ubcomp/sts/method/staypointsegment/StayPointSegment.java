@@ -1,50 +1,82 @@
 package org.ubcomp.sts.method.staypointsegment;
 
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.operation.TransformException;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 import org.ubcomp.sts.util.CalculateDistance;
-import org.ubcomp.sts.util.FindGPSPointsWithInT;
 
 public class StayPointSegment extends AbstractStayPointSegment {
     public StayPointSegment(PointList pointList, double maxD, long minT) {
         super(pointList, maxD, minT);
     }
 
-    @Override
-    public void processWithoutStayPoints() {
+
+    public void stayPointDetection() throws FactoryException, TransformException {
+        GpsPoint latestGPSPoint = pointList.getPointList().get(pointList.getSize() - 1);
         for (int i = pointList.getSize() - 2; i >= 0; i--) {
-            GpsPoint latestGPSPoint = pointList.getPointList().get(pointList.getSize() - 1);
-            double distance = CalculateDistance.calDis(latestGPSPoint, pointList.getPointList().get(i));
+            double distance;
+            GpsPoint nowPoint = pointList.getPointList().get(i);
+            distance = CalculateDistance.calDistance(latestGPSPoint, nowPoint);
             if (distance > maxD) {
                 long timeInterval = latestGPSPoint.ingestionTime - pointList.getPointList().get(i + 1).ingestionTime;
                 if (timeInterval > minT) {
-                    exactStayPoint(pointList, i);
+                    //找到了驻留点
+                    if (pointList.hasStayPoint) {
+                        processWithStayPoints(true, i);
+                    } else {
+                        processWithoutStayPoints(true, i);
+                    }
+                } else {
+                    //没找到驻留点
+                    if (pointList.hasStayPoint) {
+                        processWithStayPoints(false, i);
+                    } else {
+                        processWithoutStayPoints(false, i);
+                    }
                 }
-                break;
+                return;
             }
         }
+
     }
+
 
     @Override
-    public void processWithStayPoints() {
-        int inIndex = FindGPSPointsWithInT.findIndex(pointList.pointList, minT);
-        if (inIndex <= pointList.stayPointEndLocalIndex) {
-            boolean canMerge = true;
-            GpsPoint latestGPSPoint = pointList.getPointList().get(pointList.getSize() - 1);
-            for (int i = pointList.getSize() - 2; i >= inIndex; i--) {
-                double distance = CalculateDistance.calDis(latestGPSPoint, pointList.getPointList().get(i));
-                if (distance >= maxD) {
-                    breakStayPoint(pointList);
-                    canMerge = false;
-                    break;
-                }
-            }
-            if (canMerge) {
-                mergeStayPoint(pointList);
-            }
-        } else {
-            breakStayPoint(pointList);
+    public void processWithoutStayPoints(boolean findOrNot, int index) {
+        if (findOrNot) {
+            //Case 1.3 Only One Stay Point
+            exactStayPoint(pointList, index);
         }
+        //Case 2.3 No Stay Point(do nothing)
     }
 
+
+    @Override
+    public void processWithStayPoints(boolean findOrNot, int index) throws FactoryException, TransformException {
+        if (findOrNot) {
+            if (index <= pointList.stayPointEndLocalIndex) {
+                //Case 1.2 Two Stay Points Intersected
+                mergeStayPoint(pointList);
+            } else {
+                //Case 1.1 Two Stay Points Separated
+                int sizeOfFirstStayPoint = pointList.stayPointEndLocalIndex;
+                breakStayPoint(pointList);
+                int startIndexOfSecondStayPoint = index - sizeOfFirstStayPoint;
+                if (startIndexOfSecondStayPoint > 0) {
+                    exactStayPoint(pointList, startIndexOfSecondStayPoint);
+                }
+
+            }
+        } else {
+            //Case 2.1 Far Away from the Stay Point
+            GpsPoint latestGPSPoint = pointList.getPointList().get(pointList.getSize() - 1);
+            GpsPoint stayPointEnd = pointList.getPointList().get(pointList.stayPointEndLocalIndex - 1);
+            double distance = CalculateDistance.calDistance(latestGPSPoint, stayPointEnd);
+            if (distance > maxD) {
+                breakStayPoint(pointList);
+            }
+            //case 2.2(do nothing)
+        }
+    }
 }

@@ -48,7 +48,7 @@ public class Grid implements Serializable {
         int diffLonPlusOne = diffLon + 1;
         int diffLatPlusOne = diffLat + 1;
 
-        if (diffLonPlusOne <= 100 && diffLatPlusOne <= 100) {
+        /*if (diffLonPlusOne <= 100 && diffLatPlusOne <= 100) {
             if (squareArray[diffLonMinusOne + 1] + squareArray[diffLatMinusOne + 1] >= condition) {
                 return AreaEnum.PRUNED_AREA;
             } else if (squareArray[diffLonPlusOne + 1] + squareArray[diffLatPlusOne + 1] <= condition) {
@@ -56,7 +56,7 @@ public class Grid implements Serializable {
             } else {
                 return AreaEnum.CHECK_AREA;
             }
-        } else {
+        } else {*/
             if (diffLonMinusOne * diffLonMinusOne + diffLatMinusOne * diffLatMinusOne >= condition) {
                 return AreaEnum.PRUNED_AREA;
             }
@@ -64,6 +64,6 @@ public class Grid implements Serializable {
                 return AreaEnum.CONFIRMED_AREA;
             }
             return AreaEnum.CHECK_AREA;
-        }
+       // }
     }
 }

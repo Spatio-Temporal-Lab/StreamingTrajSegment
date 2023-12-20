@@ -16,15 +16,12 @@ public class GpsPoint {
     public double lng;
     //纬度坐标(y)
     public double lat;
-    //gps点所属移动对象编号
     public String tid;
     //时间戳
     public long ingestionTime;
-    public Point point;
     public int lonCol;
     public int latCol;
-    public boolean gridFlag = false;
-    public long processTime;
+    public Boolean isStayPoint =  false;
 
     //构造方法
     public GpsPoint() {
