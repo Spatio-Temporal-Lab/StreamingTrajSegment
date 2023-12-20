@@ -4,6 +4,7 @@ import org.ubcomp.sts.calf1score.SPDOffline;
 import org.ubcomp.sts.executor.LocalProcessFunctionGridForF1Score;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
+import org.ubcomp.sts.util.MapToGPSPoint;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -61,7 +62,7 @@ public class F1ScoreTest {
                 BufferedReader reader = new BufferedReader(new FileReader(pathOutVal + i + ".txt"));
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    GpsPoint gpsPoint = SPD.mapFunctionAcc(line);
+                    GpsPoint gpsPoint = MapToGPSPoint.mapFunctionAcc(line);
                     PointList pointList = label.computeIfAbsent(gpsPoint.tid, k -> new PointList());
                     pointList.add(gpsPoint);
                 }
@@ -71,7 +72,7 @@ public class F1ScoreTest {
                 BufferedReader reader = new BufferedReader(new FileReader(pathOutResult + i + ".txt"));
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    GpsPoint gpsPoint = SPD.mapFunctionAcc(line);
+                    GpsPoint gpsPoint = MapToGPSPoint.mapFunctionAcc(line);
                     PointList pointList = result.computeIfAbsent(gpsPoint.tid, k -> new PointList());
                     pointList.add(gpsPoint);
                 }
@@ -139,7 +140,7 @@ public class F1ScoreTest {
                 BufferedReader reader = new BufferedReader(new FileReader(pathOutVal + i + ".txt"));
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    GpsPoint gpsPoint = SPD.mapFunctionAcc(line);
+                    GpsPoint gpsPoint = MapToGPSPoint.mapFunctionAcc(line);
                     PointList pointList = label.computeIfAbsent(gpsPoint.tid, k -> new PointList());
                     pointList.add(gpsPoint);
                 }
@@ -149,7 +150,7 @@ public class F1ScoreTest {
                 BufferedReader reader = new BufferedReader(new FileReader(pathOutResult + i + ".txt"));
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    GpsPoint gpsPoint = SPD.mapFunctionAcc(line);
+                    GpsPoint gpsPoint = MapToGPSPoint.mapFunctionAcc(line);
                     PointList pointList = result.computeIfAbsent(gpsPoint.tid, k -> new PointList());
                     pointList.add(gpsPoint);
                 }
