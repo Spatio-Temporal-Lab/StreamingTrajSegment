@@ -57,7 +57,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.ubcomp.sts.local.LocalTest</mainClass>
+                            <mainClass>LocalTest</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
