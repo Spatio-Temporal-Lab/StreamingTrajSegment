@@ -57,7 +57,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>LatencyAndThroughputTest</mainClass>
+                            <mainClass>org.ubcomp.sts.LatencyAndThroughputTest</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

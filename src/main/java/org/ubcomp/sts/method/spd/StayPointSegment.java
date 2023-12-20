@@ -1,5 +1,6 @@
-package org.ubcomp.sts.method.staypointsegment;
+package org.ubcomp.sts.method.spd;
 
+import org.ubcomp.sts.method.AbstractStayPointSegment;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 import org.ubcomp.sts.util.CalculateDistance;

@@ -1,17 +1,18 @@
-package org.ubcomp.sts.method.staypointsegment;
+package org.ubcomp.sts.method.step;
 
 import org.ubcomp.sts.index.AreaEnum;
 import org.ubcomp.sts.index.Grid;
+import org.ubcomp.sts.method.AbstractStayPointSegment;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 import org.ubcomp.sts.util.CalculateDistance;
 
 
-public class StayPointSegmentWithGridOptForF1Score extends AbstractStayPointSegmentForF1Score {
+public class StayPointSegmentWithGridOpt extends AbstractStayPointSegment {
     private final Grid grid;
 
-    public StayPointSegmentWithGridOptForF1Score(PointList pointList, double maxD, long minT, Grid grid1, PointList result) {
-        super(pointList, maxD, minT, result);
+    public StayPointSegmentWithGridOpt(PointList pointList, double maxD, long minT, Grid grid1) {
+        super(pointList, maxD, minT);
         grid = grid1;
     }
 
@@ -63,28 +64,6 @@ public class StayPointSegmentWithGridOptForF1Score extends AbstractStayPointSegm
                 }
                 return;
             }
-            if (i == 0) {
-                long timeInterval = latestGPSPoint.ingestionTime - pointList.getPointList().get(0).ingestionTime;
-                if (timeInterval > minT) {
-                    //找到了驻留点
-                    if (pointList.hasStayPoint) {
-                        processWithStayPoints(true, i - 1);
-                    } else {
-                        processWithoutStayPoints(true, i - 1);
-                    }
-                    return;
-                } else {
-                    //没找到驻留点
-                    if (pointList.hasStayPoint) {
-                        processWithStayPoints(false, i - 1);
-                    } else {
-                        processWithoutStayPoints(false, i - 1);
-                    }
-                }
-                return;
-            }
-
-
         }
 
     }
@@ -94,7 +73,7 @@ public class StayPointSegmentWithGridOptForF1Score extends AbstractStayPointSegm
     public void processWithoutStayPoints(boolean findOrNot, int index) {
         if (findOrNot) {
             //Case 1.3 Only One Stay Point
-            exactStayPoint(pointList, index, result);
+            exactStayPoint(pointList, index);
         }
         //Case 2.3 No Stay Point(do nothing)
     }
@@ -109,10 +88,10 @@ public class StayPointSegmentWithGridOptForF1Score extends AbstractStayPointSegm
             } else {
                 //Case 1.1 Two Stay Points Separated
                 int sizeOfFirstStayPoint = pointList.stayPointEndLocalIndex;
-                breakStayPoint(pointList, result);
+                breakStayPoint(pointList);
                 int startIndexOfSecondStayPoint = index - sizeOfFirstStayPoint;
                 if (startIndexOfSecondStayPoint >= 0) {
-                    exactStayPoint(pointList, startIndexOfSecondStayPoint, result);
+                    exactStayPoint(pointList, startIndexOfSecondStayPoint);
                 }
 
             }
@@ -124,10 +103,10 @@ public class StayPointSegmentWithGridOptForF1Score extends AbstractStayPointSegm
             if (area == AreaEnum.CHECK_AREA) {
                 double distance = CalculateDistance.calDistance(latestGPSPoint, stayPointEnd);
                 if (distance > maxD) {
-                    breakStayPoint(pointList, result);
+                    breakStayPoint(pointList);
                 }
             } else if (area == AreaEnum.PRUNED_AREA) {
-                breakStayPoint(pointList, result);
+                breakStayPoint(pointList);
             }
             //case 2.2(do nothing)
         }

@@ -3,8 +3,8 @@ package org.ubcomp.sts.executor;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 import org.ubcomp.sts.index.Grid;
-import org.ubcomp.sts.method.staypointsegment.AbstractStayPointSegment;
-import org.ubcomp.sts.method.staypointsegment.StayPointSegmentWithGridOpt;
+import org.ubcomp.sts.method.AbstractStayPointSegment;
+import org.ubcomp.sts.method.step.StayPointSegmentWithGridOpt;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 
