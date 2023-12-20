@@ -4,7 +4,9 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 import org.ubcomp.sts.index.Grid;
 import org.ubcomp.sts.method.staypointsegment.AbstractStayPointSegment;
+import org.ubcomp.sts.method.staypointsegment.AbstractStayPointSegmentForF1Score;
 import org.ubcomp.sts.method.staypointsegment.StayPointSegmentWithGridOpt;
+import org.ubcomp.sts.method.staypointsegment.StayPointSegmentWithGridOptForF1Score;
 import org.ubcomp.sts.object.GpsPoint;
 import org.ubcomp.sts.object.PointList;
 
@@ -26,7 +28,7 @@ public class LocalProcessFunctionGridForF1Score extends AbstractLocalProcessFunc
     public void process(PointList pointList, GpsPoint point, PointList result) throws FactoryException, TransformException {
             grid.calGirdId(point);
             pointList.add(point);
-            AbstractStayPointSegment stayPointSegment = new StayPointSegmentWithGridOpt(pointList, maxD, minT, grid, result);
+            AbstractStayPointSegmentForF1Score stayPointSegment = new StayPointSegmentWithGridOptForF1Score(pointList, maxD, minT, grid, result);
             stayPointSegment.stayPointDetection();
     }
 }
