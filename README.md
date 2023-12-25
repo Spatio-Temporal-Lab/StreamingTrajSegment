@@ -1,4 +1,4 @@
-# Streaming Trajectory Segmentation Based on Stay-Point Detection (DASFAA2024)
+# Streaming Trajectory Segmentation Based on Stay-Point Detection
 ***
 STEP is  an efficient and effective streaming trajectory algorithm.
 
