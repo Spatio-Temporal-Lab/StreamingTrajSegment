@@ -1,27 +1,22 @@
 package org.ubcomp.sts.object;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * @author syy
  **/
-public class PointList implements Serializable {
+public class PointList {
 
     //temporary gps point list
-    public ArrayList<GpsPoint> pointList;
+    public ArrayList<GpsPoint> pointList = new ArrayList<>();
     //indicates the presence or absence of  stay point
     public boolean hasStayPoint = false;
-    //the location of stay point(total)
-    public int stayPointStart = 0;
-    public int stayPointEnd = 0;
-    public int getStayPointFlag = -1;
+    //the location of stay point(total), inclusive
+    public int stayPointStartGlobalIndex = -1;
+    public int stayPointEndGlobalIndex = -1;
+    public int stayPointEndLocalIndex = -1;
 
     public PointList() {
-    }
-
-    public PointList(boolean a) {
-        pointList = new ArrayList<>();
     }
 
     public void add(GpsPoint p) {

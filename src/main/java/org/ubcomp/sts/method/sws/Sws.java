@@ -13,6 +13,19 @@ import java.util.List;
  */
 public class Sws implements Serializable {
     public static double processSws(List<GpsPoint> pointList) throws ParseException {
+
+        int mid = pointList.size() / 2 + 1;
+        List<GpsPoint> pointList1 = pointList.subList(0, mid);
+        List<GpsPoint> pointList2 = pointList.subList(mid, pointList.size());
+        GpsPoint p1 = baseSws(pointList1);
+        GpsPoint p2 = baseSws(pointList2);
+
+        GpsPoint p0 = new GpsPoint((p1.lng + p2.lng) / 2, (p1.lat + p2.lat) / 2, p1.tid, pointList.get(mid).ingestionTime, 0);
+
+        return CalculateDistance.calDistance(p0, pointList.get(mid));
+    }
+
+    static GpsPoint baseSws(List<GpsPoint> pointList) throws ParseException {
         int mid = pointList.size() / 2 + 1;
         List<GpsPoint> pointListF = pointList.subList(0, mid);
         List<GpsPoint> pointListB = pointList.subList(mid, pointList.size());
@@ -43,8 +56,8 @@ public class Sws implements Serializable {
         double predictBackX = regression2X.predict(pointList.get(mid).ingestionTime - tb);
         GpsPoint p2 = new GpsPoint(predictBackY, predictBackX, pointList.get(mid).tid, pointList.get(mid).ingestionTime, 0);
 
-        GpsPoint p0 = new GpsPoint((p1.lng + p2.lng) / 2, (p1.lat + p2.lat) / 2, p1.tid, p1.ingestionTime, 0);
-        return CalculateDistance.calculateDistance(p0, pointList.get(mid));
+        return new GpsPoint((p1.lng + p2.lng) / 2, (p1.lat + p2.lat) / 2, p1.tid, p1.ingestionTime, 0);
+
     }
 
 }
