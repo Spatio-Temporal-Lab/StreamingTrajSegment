@@ -55,11 +55,6 @@ The default parameters are set according to the table below and can be adjusted 
     <th>1w,3w,5w,10w</th>
     <th>3w</th>
   </tr>
-  <tr>
-    <th>window size of SWS</th>
-    <th>7</th>
-    <th>7</th>
-  </tr>
 </table>
 
 ### Prerequisites for testing
