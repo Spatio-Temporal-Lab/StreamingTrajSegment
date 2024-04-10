@@ -3,7 +3,7 @@ package org.ubcomp.sts.util;
 import org.ubcomp.sts.object.GpsPoint;
 
 public class CalculateDistance {
-    public static double calDistance(GpsPoint p1, GpsPoint p2) {
+    public static double calDistance2(GpsPoint p1, GpsPoint p2) {
         double lat1 = p1.lat;
         double lat2 = p2.lat;
         double lng1 = p1.lng;
@@ -20,6 +20,19 @@ public class CalculateDistance {
         s = s * 1000;
         return s;
     }
+    public static double calDistance(GpsPoint p1, GpsPoint p2) {
+        double radLat1 = calRad(p1.lat);
+        double radLon1 = calRad(p1.lng);
+        double radLat2 = calRad(p2.lat);
+        double radLon2 = calRad(p2.lng);
+
+        double deltaLat = radLat2 - radLat1;
+        double deltaLon = radLon2 - radLon1;
+
+        double addAll = Math.pow(deltaLat, 2) + Math.pow(deltaLon, 2);
+        return Math.sqrt(addAll) * 6378.137 * 1000 ;
+    }
+
 
     public static double calRad(double a) {
         return a * Math.PI / 180.0;
